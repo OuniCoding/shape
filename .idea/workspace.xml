@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="0cd695d8-c937-4bb9-8e64-445fafea4ae2" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.gitattributes" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/aws.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shape.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/343.bmp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/447.bmp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/B1.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/B2.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/B3.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Blob_1.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/VideoShape.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/VideoShape1.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/a-test.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/a.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/a.mp4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/a.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/a0.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/a1.mp4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/a1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/a2.mp4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/australian_states.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/b.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ball.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ballcode.zip" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blob.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blob_analysis.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blue.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cap/1gold-3000.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cap/1gold-3000w.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cap/1red-5000.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cap/1red-5050.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cap/gold-3000.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cap/gold-3000w.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cap/red-5000.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cap/red-5050.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gold.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/l_blue.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lable_text.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/logo_FLANN.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/red-base.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/red-base1.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/red.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resize_img.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/selectcolor.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shape.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shape_org.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shapes.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shapes1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shapes2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/FLANN.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/australian_states.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/australian_states_blobs_biggest.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/australian_states_blobs_ids.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/blue_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/blue_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/red_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/red_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/result_blue.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/result_gold.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/result_red.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/rotated.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/rotated_inf.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test-result.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/transparent.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/white.jpg" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/shape_org.py" root0="FORCE_HIGHLIGHTING" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 5
+}</component>
+  <component name="ProjectId" id="2RlnBRiay4GL1h4qNvz3dKJITBr" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python.Blob_1.executor": "Run",
+    "Python.Blob_2.executor": "Debug",
+    "Python.blob.executor": "Run",
+    "Python.blob_analysis.executor": "Run",
+    "Python.lable_text.executor": "Run",
+    "Python.logo_FLANN.executor": "Run",
+    "Python.resize_img.executor": "Debug",
+    "Python.selectcolor.executor": "Run",
+    "Python.shape.executor": "Run",
+    "Python.shape_org.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "master",
+    "last_opened_file_path": "F:/project/python/shape",
+    "settings.editor.selected.configurable": "configurable.group.tools"
+  }
+}]]></component>
+  <component name="RunManager" selected="Python.lable_text">
+    <configuration name="Blob_1" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="shape" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Blob_1.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Blob_2" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="shape" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Blob_2.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="lable_text" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="shape" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/lable_text.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="resize_img" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="shape" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/resize_img.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="shape_org" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="shape" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/shape_org.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.lable_text" />
+        <item itemvalue="Python.Blob_1" />
+        <item itemvalue="Python.resize_img" />
+        <item itemvalue="Python.Blob_2" />
+        <item itemvalue="Python.shape_org" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-python-sdk-d68999036c7f-d3b881c8e49f-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-233.14475.56" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="0cd695d8-c937-4bb9-8e64-445fafea4ae2" name="Changes" comment="" />
+      <created>1687833400085</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1687833400085</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="TEXT_FILTER_SETTINGS">
+                <TextFilterSettings>
+                  <option name="REGEX" value="true" />
+                </TextFilterSettings>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/blob.py</url>
+          <line>17</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/blob_analysis.py</url>
+          <line>56</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/blob_analysis.py</url>
+          <line>102</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Blob_2.py</url>
+          <line>141</line>
+          <option name="timeStamp" value="26" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/resize_img.py</url>
+          <line>13</line>
+          <option name="timeStamp" value="27" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+    <watches-manager>
+      <configuration name="PythonConfigurationType">
+        <watch expression="contours[0]" language="Python" />
+      </configuration>
+    </watches-manager>
+  </component>
+</project>
