@@ -1,0 +1,2 @@
+blob_id,area,perimeter,convexity,aspect_ratio,extent,width,height,hull_area,ellipse_angle,rect_x1,rect_y1,rect_x2,rect_y2,radius,xa,ya,xc,yc,xf,yf,min_area_rectangle,ellipse,vx,vy,left_y,right_y
+1,2300881.0,6236.0,True,1.6,0.999,1920,1200,2300881.0,0,0,1920,1200,1131.388916,959.5,599.5,959.5,599.5,"((959.4998779296875, 599.4998779296875), (1918.999755859375, 1198.999755859375), -0.0)",1.0,0.0,599,599
