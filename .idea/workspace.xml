@@ -14,29 +14,7 @@
       <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/.idea/shape.iml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/343.bmp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/447.bmp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/B1.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/B2.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/B3.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Blob_1.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/VideoShape.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/VideoShape1.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/a-test.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/a.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/a.mp4" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/a.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/a0.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/a1.mp4" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/a1.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/a2.mp4" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/australian_states.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/b.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ball.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ballcode.zip" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/blob.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/blob_analysis.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/blue.jpg" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/cap/1gold-3000.jpg" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/cap/1gold-3000w.jpg" afterDir="false" />
@@ -48,34 +26,213 @@
       <change afterPath="$PROJECT_DIR$/cap/red-5050.jpg" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/gold.jpg" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/l_blue.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lable_text.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/logo_FLANN.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/red-base.jpg" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/red-base1.jpg" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/red.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resize_img.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/selectcolor.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/shape.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/shape_org.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/shapes.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/shapes1.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/shapes2.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/temp/FLANN.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/temp/australian_states.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/temp/australian_states_blobs_biggest.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/temp/australian_states_blobs_ids.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/temp/blue_o7.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/temp/blue_o7_inv.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/temp/red_o7.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/temp/red_o7_inv.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/temp/result_blue.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/temp/result_gold.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/temp/result_red.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/temp/rotated.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/temp/rotated_inf.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test-result.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305115118886.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305115118886.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305115146470.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305115146470.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305115337910.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305115337910.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305115420742.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305115420742.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305115454710.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305115454710.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305115803534.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305115803534.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305115857830.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305115857830.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305115946142.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305115946142.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305120050510.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305120050510.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305120128805.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305120128805.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305120235662.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305120235662.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305120355942.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305120355942.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305120425014.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305120425014.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305120525045.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305120525045.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305120651925.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305120651925.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305120720941.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305120720941.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305120744726.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305120744726.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305120805038.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305120805038.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305120845182.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305120845182.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305120923829.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305120923829.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305121014437.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305121014437.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305121059765.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305121059765.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305121135370.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305121135370.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305121215389.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305121215389.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305121304357.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305121304357.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305121424429.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305121424429.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305121518367.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305121518367.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305121635405.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305121635405.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305121706501.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305121706501.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305121748876.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305121748876.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305121809933.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305121809933.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305121837524.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305121837524.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305121906349.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305121906349.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305121940748.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305121940748.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305122110170.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305122110170.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305122126829.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305122126829.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305122145680.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305122145680.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305122236781.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305122236781.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305122301069.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305122301069.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305122425149.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305122425149.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305122458229.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305122458229.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305122535948.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305122535948.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305122555949.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305122555949.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305122730620.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305122730620.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305122828701.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305122828701.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305122857764.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305122857764.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305122927364.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305122927364.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305122948595.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305122948595.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305123023011.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305123023011.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305123108068.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305123108068.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305123231843.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305123231843.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305123308964.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305123308964.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305123415723.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305123415723.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305123435395.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305123435395.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305123607187.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305123607187.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305123644707.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305123644707.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305123737156.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305123737156.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305123830580.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305123830580.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305123902687.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305123902687.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305123957723.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305123957723.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305142843788.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305142843788.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305143010957.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305143010957.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305143108428.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305143108428.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305143152916.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305143152916.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305143248748.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305143248748.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305143406084.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305143406084.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305143508036.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305143508036.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305143737427.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305143737427.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305143803492.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305143803492.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305143835308.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305143835308.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305144036811.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305144036811.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305144111230.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305144111230.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305144220468.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305144220468.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305144339268.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305144339268.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305144409643.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305144409643.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305144441611.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305144441611.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305144518468.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305144518468.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305144604131.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305144604131.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305144647268.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305144647268.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305144710900.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305144710900.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305144802435.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305144802435.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305144859388.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305144859388.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305145038851.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305145038851.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305145146307.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305145146307.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305145508540.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305145508540.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305145558260.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305145558260.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305145631371.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305145631371.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305145718932.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305145718932.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305145752347.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305145752347.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305145823283.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305145823283.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305145907932.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305145907932.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305145950707.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305145950707.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305150028258.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305150028258.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305150049628.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305150049628.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305150145115.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305150145115.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305150425563.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305150425563.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305150518875.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305150518875.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305150553980.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305150553980.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305150625275.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305150625275.jpg_o7_inv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305150705650.jpg_o7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/temp/trans_p/Image_20240305150705650.jpg_o7_inv.png" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/transparent.jpg" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/white.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/temp/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/temp/readme.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -90,10 +247,28 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="PUSH_TAGS">
+      <GitPushTagMode>
+        <option name="argument" value="--follow-tags" />
+        <option name="title" value="Current Branch" />
+      </GitPushTagMode>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">
+    <option name="selectedUrlAndAccountId">
+      <UrlAndAccount>
+        <option name="accountId" value="cc9ed126-909b-4d9d-ba2a-c0084b87b162" />
+        <option name="url" value="https://github.com/OuniCoding/shape.git" />
+      </UrlAndAccount>
+    </option>
+  </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/shape_org.py" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Blob_1.py" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -111,26 +286,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.Blob_1.executor": "Run",
-    "Python.Blob_2.executor": "Debug",
-    "Python.blob.executor": "Run",
-    "Python.blob_analysis.executor": "Run",
-    "Python.lable_text.executor": "Run",
-    "Python.logo_FLANN.executor": "Run",
-    "Python.resize_img.executor": "Debug",
-    "Python.selectcolor.executor": "Run",
-    "Python.shape.executor": "Run",
-    "Python.shape_org.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
-    "last_opened_file_path": "F:/project/python/shape",
-    "settings.editor.selected.configurable": "configurable.group.tools"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.Blob_1.executor&quot;: &quot;Debug&quot;,
+    &quot;Python.Blob_2.executor&quot;: &quot;Run&quot;,
+    &quot;Python.blob.executor&quot;: &quot;Run&quot;,
+    &quot;Python.blob_analysis.executor&quot;: &quot;Run&quot;,
+    &quot;Python.lable_text.executor&quot;: &quot;Run&quot;,
+    &quot;Python.logo_FLANN.executor&quot;: &quot;Run&quot;,
+    &quot;Python.resize_img.executor&quot;: &quot;Run&quot;,
+    &quot;Python.selectcolor.executor&quot;: &quot;Run&quot;,
+    &quot;Python.shape.executor&quot;: &quot;Run&quot;,
+    &quot;Python.shape_org.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;F:/project/bottlecap/code&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
   }
-}]]></component>
-  <component name="RunManager" selected="Python.lable_text">
+}</component>
+  <component name="RunManager" selected="Python.resize_img">
     <configuration name="Blob_1" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="shape" />
       <option name="ENV_FILES" value="" />
@@ -140,10 +315,16 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
+      <option name="SDK_NAME" value="Python 3.10" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
+      <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="software.aws.toolkits.jetbrains.core.execution.PythonAwsConnectionExtension">
+        <option name="credential" />
+        <option name="region" />
+        <option name="useCurrentConnection" value="false" />
+      </EXTENSION>
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Blob_1.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
@@ -162,10 +343,16 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
+      <option name="SDK_NAME" value="Python 3.10" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
+      <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="software.aws.toolkits.jetbrains.core.execution.PythonAwsConnectionExtension">
+        <option name="credential" />
+        <option name="region" />
+        <option name="useCurrentConnection" value="false" />
+      </EXTENSION>
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Blob_2.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
@@ -241,12 +428,19 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <list>
+      <item itemvalue="Python.Blob_1" />
+      <item itemvalue="Python.Blob_2" />
+      <item itemvalue="Python.lable_text" />
+      <item itemvalue="Python.resize_img" />
+      <item itemvalue="Python.shape_org" />
+    </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.lable_text" />
-        <item itemvalue="Python.Blob_1" />
         <item itemvalue="Python.resize_img" />
         <item itemvalue="Python.Blob_2" />
+        <item itemvalue="Python.Blob_1" />
+        <item itemvalue="Python.lable_text" />
         <item itemvalue="Python.shape_org" />
       </list>
     </recent_temporary>
@@ -274,48 +468,13 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State>
-              <option name="TEXT_FILTER_SETTINGS">
-                <TextFilterSettings>
-                  <option name="REGEX" value="true" />
-                </TextFilterSettings>
-              </option>
-            </State>
+            <State />
           </value>
         </entry>
       </map>
     </option>
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/blob.py</url>
-          <line>17</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/blob_analysis.py</url>
-          <line>56</line>
-          <option name="timeStamp" value="3" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/blob_analysis.py</url>
-          <line>102</line>
-          <option name="timeStamp" value="5" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Blob_2.py</url>
-          <line>141</line>
-          <option name="timeStamp" value="26" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/resize_img.py</url>
-          <line>13</line>
-          <option name="timeStamp" value="27" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">
         <watch expression="contours[0]" language="Python" />
