@@ -306,11 +306,11 @@ img_path = 'F:\\project\\bottlecap\\Samples\\black\\' #'F:\\project\\bottlecap\\
 #img_path = 'F:\\project\\bottlecap\\SAMPLES OUTSIDE\\0326\\tr\\' #'F:\\project\\bottlecap\\Samples\\' + color_t + "\\"
 # img_files = os.listdir(img_path)
 #img_path = 'F:\\project\\bottlecap\\test1\\0529\\red\\'
-img_path = 'F:\\project\\bottlecap\\test1\\in\\black\\2024-06-05\\1\\resultG\\'
+img_path = 'F:\\project\\bottlecap\\test1\\in\\pink\\2024-06-05\\1\\resultG\\'
 #img_path = 'F:\\project\\bottlecap\\test1\\0530\\Logo\\red\\2024-05-30\\1\\resultNG\\'
 
 max_Area = 5000
-color_t = 'black'
+color_t = 'pink'
 work_path = 'temp/'+color_t
 minSize = 85
 blockSize = 13
