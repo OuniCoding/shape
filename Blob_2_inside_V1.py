@@ -7,30 +7,6 @@ import numpy as np
 import os
 import time
 
-#img_path = 'F:\\project\\bottlecap\\20240217_outside\\red16500\\' #'F:\\project\\bottlecap\\Samples\\' + color_t + "\\"
-#img_path = 'F:\\project\\bottlecap\\20240217_outside\\blue16500\\' #'F:\\project\\bottlecap\\Samples\\' + color_t + "\\"
-#img_path = 'F:\\project\\bottlecap\\20240217_outside\\green12000\\' #'F:\\project\\bottlecap\\Samples\\' + color_t + "\\"
-#img_path = 'F:\\project\\bottlecap\\20240217_outside\\white3900\\' #'F:\\project\\bottlecap\\Samples\\' + color_t + "\\"
-img_path = 'F:\\project\\bottlecap\\Samples\\black\\' #'F:\\project\\bottlecap\\Samples\\' + color_t + "\\"
-#img_path = 'F:\\project\\bottlecap\\SAMPLES OUTSIDE\\0326\\tr\\' #'F:\\project\\bottlecap\\Samples\\' + color_t + "\\"
-# img_files = os.listdir(img_path)
-#img_path = 'F:\\project\\bottlecap\\test1\\0529\\red\\'
-img_path = 'F:\\project\\bottlecap\\test1\\in\\black\\2024-06-05\\1\\resultG\\'
-#img_path = 'F:\\project\\bottlecap\\test1\\0530\\Logo\\red\\2024-05-30\\1\\resultNG\\'
-
-
-max_Area = 5000
-color_t = 'black'
-work_path = 'temp/'+color_t
-minSize = 85
-blockSize = 13
-C_V = 2
-min_pixels = 800000
-
-if not os.path.exists(work_path):
-    os.makedirs(work_path)
-    os.makedirs(work_path + '_p/')
-
 def process_img(frame):
     cv.imshow("input", frame)
     #gray = cv.cvtColor(frame, cv.COLOR_RGB2GRAY)
@@ -321,6 +297,29 @@ def process_blob(file, frame, binary, output7_inv):
         # cv.imwrite('temp/'+ color_t +'/result_' + file, result)
 
     return result
+
+#img_path = 'F:\\project\\bottlecap\\20240217_outside\\red16500\\' #'F:\\project\\bottlecap\\Samples\\' + color_t + "\\"
+#img_path = 'F:\\project\\bottlecap\\20240217_outside\\blue16500\\' #'F:\\project\\bottlecap\\Samples\\' + color_t + "\\"
+#img_path = 'F:\\project\\bottlecap\\20240217_outside\\green12000\\' #'F:\\project\\bottlecap\\Samples\\' + color_t + "\\"
+#img_path = 'F:\\project\\bottlecap\\20240217_outside\\white3900\\' #'F:\\project\\bottlecap\\Samples\\' + color_t + "\\"
+img_path = 'F:\\project\\bottlecap\\Samples\\black\\' #'F:\\project\\bottlecap\\Samples\\' + color_t + "\\"
+#img_path = 'F:\\project\\bottlecap\\SAMPLES OUTSIDE\\0326\\tr\\' #'F:\\project\\bottlecap\\Samples\\' + color_t + "\\"
+# img_files = os.listdir(img_path)
+#img_path = 'F:\\project\\bottlecap\\test1\\0529\\red\\'
+img_path = 'F:\\project\\bottlecap\\test1\\in\\black\\2024-06-05\\1\\resultG\\'
+#img_path = 'F:\\project\\bottlecap\\test1\\0530\\Logo\\red\\2024-05-30\\1\\resultNG\\'
+
+max_Area = 5000
+color_t = 'black'
+work_path = 'temp/'+color_t
+minSize = 85
+blockSize = 13
+C_V = 2
+min_pixels = 800000
+
+if not os.path.exists(work_path):
+    os.makedirs(work_path)
+    os.makedirs(work_path + '_p/')
 
 img_files = [_ for _ in os.listdir(img_path) if (_.endswith('.jpg') or _.endswith('.png'))]
 for img_file in img_files:
