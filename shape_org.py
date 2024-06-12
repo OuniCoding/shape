@@ -167,7 +167,7 @@ if __name__ == "__main__":
     #image = cv.imread('F:/project/bottlecap/gold/Image_20240202184242330.jpg')
     #image = cv.imread('F:/project/bottlecap/red/OK/Image_20240202154544577.jpg')   #Image_20240202160555332.jpg')
     #image = cv.imread('F:/project/bottlecap/20240217 outside/trans/Image_20240217134201707.jpg')    #Image_20240217133233378.jpg') 180
-    image = cv.imread('F:\\project\\bottlecap\\test\\Image_20240229171004566.jpg ')
+    image = cv.imread('p1.jpg') #('F:\\project\\bottlecap\\test\\Image_20240229171004566.jpg ')
     ld = ShapeAnalysis()
     ld.analysis(image)
 
