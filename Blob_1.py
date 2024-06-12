@@ -6,10 +6,10 @@ import cv2 as cv
 import numpy as np
 
 max_Area = 2000
-color_t = 'trans'
+color_t = 'red'
 if color_t == 'red':
     blur = 15
-    thres = 23
+    thres = 60  #23
 elif color_t == 'blue':
     blur = 7
     thres = 23
@@ -40,7 +40,9 @@ else:   #black
 #trans
 #frame = cv.imread("F:\\project\\bottlecap\\trans\\NEW1\\Image_20240304165455735.jpg")
 #frame = cv.imread("F:\\project\\bottlecap\\test\\trans\\Image_20240304140009113-1.jpg")
-frame = cv.imread('F:\\project\\bottlecap\\test\\trans_NG\\Image_20240306092811538.jpg')
+#frame = cv.imread('F:\\project\\bottlecap\\test\\trans_NG\\Image_20240306092811538.jpg')
+#frame = cv.imread('F:\\project\\bottlecap\\test\\blue\\Image_20240312145630076.jpg')
+frame = cv.imread('F:\\project\\bottlecap\\20240217_outside\\red16500\\Image_20240326085113532.jpg')
 cv.imshow("input", frame)
 gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
 #gray = cv.bitwise_not(gray)
@@ -85,7 +87,7 @@ params = cv.SimpleBlobDetector_Params()
 
 # change thresholds
 params.minThreshold = 0
-params.maxThreshold = 120
+params.maxThreshold = 125   #120
 
 # filter by color
 params.filterByColor = True
