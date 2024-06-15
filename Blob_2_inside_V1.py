@@ -7,7 +7,7 @@ import numpy as np
 import os
 import time
 
-def process_img(frame):
+def process_img(frame, mask):
     cv.imshow("input", frame)
     #gray = cv.cvtColor(frame, cv.COLOR_RGB2GRAY)
     gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
@@ -147,9 +147,10 @@ def process_img(frame):
         print('cx=', cx, 'cy=', cy)
         if (x_max > cx and x_min > cx) or (x_max < cx and x_min < cx):
             cx1 = cx
+            print('c1x=', cx)
         #if radius > dis: radius = dis
 
-        cv.circle(black, (cx, cy), radius, (255, 255, 255), -1)
+        cv.circle(black, (int((cx1+cx)/2), cy), radius, (255, 255, 255), -1)
         #cv.circle(black, (cx1, cy1), radius, (255, 255, 255), -1)
         cv.circle(black, (cx, cy), 5, (0, 255, 0), -1)
         cv.circle(black, (cx1, cy1), 2, (0, 0, 255), -1)
@@ -201,7 +202,7 @@ def process_img(frame):
     black_b = cv.cvtColor(black, cv.COLOR_BGR2GRAY)
     ret, black_b = cv.threshold(black_b, 1, 255, cv.THRESH_BINARY)
     cv.imshow("b", black_b)
-    #binary = cv.bitwise_and(binary, black_b)
+    binary = cv.bitwise_and(binary, black_b)
 
     cv.imshow("BIN", binary)
     output5 = cv.adaptiveThreshold(gray2, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY, blockSize, C_V)
@@ -257,8 +258,8 @@ def process_blob(file, frame, binary, output7_inv):
 
     # contours, hierarchy = cv.findContours(binary, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
     # contours, hierarchy = cv.findContours(output9, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
-    contours, hierarchy = cv.findContours(output7_inv, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
-    #contours, hierarchy = cv.findContours(binary, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
+    #contours, hierarchy = cv.findContours(output7_inv, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
+    contours, hierarchy = cv.findContours(binary, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
     for cnt in range(len(contours)):
         area = cv.contourArea(contours[cnt])
         # debug
@@ -266,7 +267,7 @@ def process_blob(file, frame, binary, output7_inv):
         # debug
         if area >= minSize and area <= max_Area:     # trans:7000
             # 提取與繪制輪廓
-            #cv.drawContours(frame, contours, cnt, (0, 255, 0), 1)
+            cv.drawContours(frame, contours, cnt, (0, 255, 0), 1)
             #cv.imshow("contours", frame)
             print(cnt,':', area)
             #debug cv.waitKey(1)
@@ -276,8 +277,8 @@ def process_blob(file, frame, binary, output7_inv):
     # 提取关键点
     keypoints = []
     detector = cv.SimpleBlobDetector_create(params)
-    keypoints = detector.detect(output7_inv)    #(binary) #  gray
-    #keypoints = detector.detect(binary) #  gray
+    #keypoints = detector.detect(output7_inv)    #(binary) #  gray
+    keypoints = detector.detect(binary) #  gray
     print(len(keypoints))
     result = []
     blank = np.zeros((1, 1))
@@ -302,17 +303,19 @@ def process_blob(file, frame, binary, output7_inv):
 #img_path = 'F:\\project\\bottlecap\\20240217_outside\\blue16500\\' #'F:\\project\\bottlecap\\Samples\\' + color_t + "\\"
 #img_path = 'F:\\project\\bottlecap\\20240217_outside\\green12000\\' #'F:\\project\\bottlecap\\Samples\\' + color_t + "\\"
 #img_path = 'F:\\project\\bottlecap\\20240217_outside\\white3900\\' #'F:\\project\\bottlecap\\Samples\\' + color_t + "\\"
-img_path = 'F:\\project\\bottlecap\\Samples\\black\\' #'F:\\project\\bottlecap\\Samples\\' + color_t + "\\"
+#img_path = 'F:\\project\\bottlecap\\Samples\\black\\' #'F:\\project\\bottlecap\\Samples\\' + color_t + "\\"
 #img_path = 'F:\\project\\bottlecap\\SAMPLES OUTSIDE\\0326\\tr\\' #'F:\\project\\bottlecap\\Samples\\' + color_t + "\\"
 # img_files = os.listdir(img_path)
 #img_path = 'F:\\project\\bottlecap\\test1\\0529\\red\\'
-img_path = 'F:\\project\\bottlecap\\test1\\in\\pink\\2024-06-05\\1\\resultG\\'
+img_path = 'F:\\project\\bottlecap\\test1\\in\\green\\2024-06-14\\1\\resultNG\\'
 #img_path = 'F:\\project\\bottlecap\\test1\\0530\\Logo\\red\\2024-05-30\\1\\resultNG\\'
 
 max_Area = 5000
-color_t = 'pink'
+color_t = 'green'
 work_path = 'temp/'+color_t
 minSize = 85
+sens = 6
+rate = (11 - sens) / 5
 blockSize = 13
 C_V = 2
 min_pixels = 800000
@@ -336,7 +339,7 @@ for img_file in img_files:
     if color_t == 'red':
         blur = 13    #13
         thres = 23  #60  # 23
-        minSize = 50
+        minSize = 50 * rate
         blockSize = 13
         C_V = 2
         hmin = 0    #0  # 156
@@ -350,6 +353,7 @@ for img_file in img_files:
         thres = 10#23
         blockSize = 9   #11
         C_V = 9 #5
+        minSize = 85 * rate
         # 藍
         hmin = 105
         hmax = 200
@@ -362,7 +366,7 @@ for img_file in img_files:
         thres = 20    #65  #40  # 23
         blockSize = 3   #13
         C_V = 9#2
-        minSize = 45
+        minSize = 45 * rate
         hmin = 5      #5    # 156
         hmax = 37     #178  #190  # 180
         smin = 50     #0    # 43
@@ -370,21 +374,21 @@ for img_file in img_files:
         vmin = 60#40     #0    # 46
         vmax = 235 #255  # 255
     elif color_t == 'green':
-        blur = 11#13#11     #15
-        thres = 12#11        #44
+        blur = 11#13
+        thres = 12#11
         blockSize = 13
         C_V = 2
-        minSize = 45
-        hmin = 40#30
-        hmax = 128#99
-        smin = 26
-        smax = 240
-        vmin = 44#46
-        vmax = 210
+        minSize = 45 * rate
+        hmin = 49#40       # hmin = 40
+        hmax = 89#128      # hmax = 75
+        smin = 43#26       # smin = 41
+        smax = 240         # smax = 169
+        vmin = 44          # vmin = 79
+        vmax = 210         # vmax = 255
     elif color_t == 'pink':
         blur = 5   #7
         thres = 25    #81  #26  #64
-        minSize = 50
+        minSize = 50 * rate
         blockSize = 13
         C_V = 2
         hmin = 68     #0  # 5
@@ -396,7 +400,7 @@ for img_file in img_files:
     elif color_t == 'lightblue':
         blur = 11
         thres = 25#11
-        minSize = 50
+        minSize = 50 * rate
         hmin = 90#70
         hmax = 150#190
         smin = 45#71
@@ -406,7 +410,7 @@ for img_file in img_files:
     elif color_t == 'white':
         blur = 3#7
         thres = 100#69
-        minSize = 45
+        minSize = 45 * rate
         max_Area = 9000
         blockSize = 9
         C_V = 3
@@ -419,7 +423,7 @@ for img_file in img_files:
     elif color_t == 'trans':
         blur = 5#7
         thres = 10#5
-        minSize = 50
+        minSize = 50 * rate
         max_Area = 7000
         blockSize = 9
         C_V = 13
@@ -432,6 +436,7 @@ for img_file in img_files:
     else:  # black
         blur = 11
         thres = 128 # 240
+        minSize = 85 * rate
         #color_t = color_t + '1'
         hmin = 0
         hmax = 36   #48  # 140
@@ -447,7 +452,9 @@ for img_file in img_files:
         hsv_low = np.array([hmin, smin, vmin])
         hsv_high = np.array([hmax, smax, vmax])
         mask = cv.inRange(hsv, hsv_low, hsv_high)
+        cv.imshow('mask', mask)
         frame_res = cv.bitwise_and(frame, frame, mask=mask)
+
     #if color_t == 'red':
     #    hmin = 100  # 156
     #    hmax = 255  # 180
@@ -461,7 +468,7 @@ for img_file in img_files:
     #    res2 = cv.bitwise_and(frame, frame, mask=mask)
     #    frame_res = cv.bitwise_or(frame_res, res2)
 
-    img_bin, img_o7, img_o7_inv = process_img(frame_res)
+    img_bin, img_o7, img_o7_inv = process_img(frame_res, mask)
 
     cv.imwrite('temp/'+color_t+ '_p/'+ img_file + '_b.png', img_bin)
     cv.imwrite('temp/' + color_t + '_p/' + img_file + '_o7.png', img_o7)

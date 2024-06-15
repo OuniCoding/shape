@@ -274,13 +274,14 @@ def process_blob(file,frame, binary, output7_inv):
     contours, hierarchy = cv.findContours(binary, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
     for cnt in range(len(contours)):
         area = cv.contourArea(contours[cnt])
+        print(cnt, ':', area)
         if area >= minSize and area <= max_Area:     # trans:7000
             # 提取與繪制輪廓
             cv.drawContours(frame, contours, cnt, (0, 255, 0), 1)
-            print(cnt,':', area)
+            #print(cnt,':', area)
         else:
             cv.drawContours(frame, contours, cnt, (0, 25, 255), 1)
-    #w cv.imshow("contours", frame)
+    cv.imshow("contours", frame)
     # 提取关键点
     keypoints = []
     detector = cv.SimpleBlobDetector_create(params)
@@ -308,9 +309,12 @@ def process_blob(file,frame, binary, output7_inv):
     return result
 
 max_Area = 5000
-color_t = 'gold'
+color_t = 'green'
 work_path = 'temp_o/'+color_t
 minSize = 85
+sens = 6
+rate = (11 - sens) / 5
+
 blockSize = 11
 C_V = 2
 min_pixels = 610000
@@ -323,7 +327,7 @@ if not os.path.exists(work_path):
 #img_path = 'F:\\project\\bottlecap\\20240217_outside\\white3900\\' #'F:\\project\\bottlecap\\Samples\\' + color_t + "\\"
 # img_path = 'F:\\project\\bottlecap\\Samples\\blue\\' #'F:\\project\\bottlecap\\Samples\\' + color_t + "\\"
 # img_path = 'F:\\project\\bottlecap\\SAMPLES OUTSIDE\\0326\\pink\\' #'F:\\project\\bottlecap\\Samples\\' + color_t + "\\"
-img_path = 'F:\\project\\bottlecap\\test1\\in\\gold\\2024-06-05\\2\\resultNG\\'
+img_path = 'F:\\project\\bottlecap\\test1\\in\\green\\2024-06-15\\2\\resultG\\'
 # img_files = os.listdir(img_path)
 img_files = [_ for _ in os.listdir(img_path) if (_.endswith('.jpg') or _.endswith('.png'))]
 for img_file in img_files:
@@ -338,7 +342,7 @@ for img_file in img_files:
     if color_t == 'red':
         blur = 13
         thres = 23#24
-        minSize = 50
+        minSize = 50  * rate
         blockSize = 9
         C_V = 9
         hmin = 0          #0  # 156
@@ -352,6 +356,7 @@ for img_file in img_files:
         thres = 12            #19  # 35  #23
         blockSize = 9
         C_V = 9
+        minSize = 85 * rate
         # 藍
         hmin = 102         #100  # 109
         hmax = 180         #144  # 124
@@ -364,6 +369,7 @@ for img_file in img_files:
         thres = 40  # 23
         blockSize = 3
         C_V = 9
+        minSize = 85 * rate
         hmin = 15  # 156
         hmax = 70  #190  # 180
         smin = 43   #15  # 43
@@ -375,16 +381,17 @@ for img_file in img_files:
         thres = 44
         blockSize = 11
         C_V = 7
-        hmin = 30          #35  # 35
-        hmax = 165         #108  # 77
-        smin = 26          #43  # 43
-        smax = 240         #220  # 255
-        vmin = 46          #42  # 46
-        vmax = 210         #225  # 255
+        minSize = 50 * rate
+        hmin = 3#30          #35  # 35
+        hmax = 95#165         #108  # 77
+        smin = 28#26          #43  # 43
+        smax = 255#240         #220  # 255
+        vmin = 61#46          #42  # 46
+        vmax = 255#210         #225  # 255
     elif color_t == 'pink':
         blur = 7
         thres = 25  #64
-        minSize = 50
+        minSize = 50 * rate
         hmin = 68          #0  # 5
         hmax = 255         #212  # 180
         smin = 45         #5  # 43
@@ -394,7 +401,7 @@ for img_file in img_files:
     elif color_t == 'lightblue':
         blur = 11       #15
         thres = 25      #40  #70  # 20
-        minSize = 45
+        minSize = 45 * rate
         hmin = 78          #78
         hmax = 120         #120  # 108
         smin = 71          #43
@@ -404,7 +411,7 @@ for img_file in img_files:
     elif color_t == 'white':
         blur = 7  # 5
         thres = 60  # 72 #112 #88
-        minSize = 45
+        minSize = 45 * rate
         max_Area = 9000
         blockSize = 9
         C_V = 3
@@ -417,7 +424,7 @@ for img_file in img_files:
     elif color_t == 'trans':
         blur = 7
         thres = 10       #23  #58  # 19 #66
-        minSize = 40
+        minSize = 40 * rate
         max_Area = 7000
         blockSize = 9
         C_V = 10
@@ -430,7 +437,7 @@ for img_file in img_files:
     else:  # black
         blur = 11
         thres = 128  # 240
-        minSize = 85
+        minSize = 85  * rate
         # color_t = color_t + '1'
         hmin = 0
         hmax = 36   #48  # 140
