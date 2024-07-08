@@ -8,6 +8,7 @@ import os
 import time
 
 def process_img(frame, mask):
+    frame= cv.addWeighted(frame, 0.8, frame, 0, 0)  # 0517 bright
     cv.imshow("input", frame)
     #gray = cv.cvtColor(frame, cv.COLOR_RGB2GRAY)
     gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
@@ -150,14 +151,13 @@ def process_img(frame, mask):
             print('c1x=', cx)
         #if radius > dis: radius = dis
 
-        cv.circle(black, (int((cx1+cx)/2), cy), radius, (255, 255, 255), -1)
+        cv.circle(black, (int((cx1+cx)/2), cy), radius , (255, 255, 255), -1)
         #cv.circle(black, (cx1, cy1), radius, (255, 255, 255), -1)
         cv.circle(black, (cx, cy), 5, (0, 255, 0), -1)
         cv.circle(black, (cx1, cy1), 2, (0, 0, 255), -1)
         # cv.circle(black, (cx1, cy1), dis, (0, 0, 255), 1)
         # cv.imshow('line', black)
         # cv.waitKey(0)
-
         # 求解中心位置
         # mm = cv.moments(contours[cnt])
         # # print(corners,shape_type, mm)
@@ -220,7 +220,25 @@ def process_img(frame, mask):
 
     cv.imshow("O7_inv", output7_inv)
 
-    return binary, output7, output7_inv
+    ret, black_a = cv.threshold(binary, 1, 255, cv.THRESH_BINARY)
+    circles = cv.HoughCircles(black_a, cv.HOUGH_GRADIENT, 1, 20, param1=50, param2=20, minRadius=0, maxRadius=0)
+    black = cv.imread('black1120.jpg')
+    black_a = cv.cvtColor(black, cv.COLOR_BGR2GRAY)
+    ret, black_a = cv.threshold(black_a, 1, 255, cv.THRESH_BINARY)
+    if circles is not None:
+        circles = np.round(circles[0, :]).astype('int')
+
+        for (x, y, r) in circles:
+            cv.circle(black_a, (x, y), r, (255, 255, 255), -1)
+        cv.imshow("black_b", black_a)
+        diff = cv.absdiff(black_a, binary)
+    else:
+        diff = cv.absdiff(black_b, binary)
+
+    ret, diff = cv.threshold(diff, 127, 255, cv.THRESH_BINARY_INV)
+    cv.imshow("diff", diff)
+
+    return binary, output7, diff    #output7_inv
 
 def process_blob(file, frame, binary, output7_inv):
     params = cv.SimpleBlobDetector_Params()
@@ -271,29 +289,38 @@ def process_blob(file, frame, binary, output7_inv):
             #cv.imshow("contours", frame)
             print(cnt,':', area)
             #debug cv.waitKey(1)
-        #else:
-        #    cv.drawContours(frame, contours, cnt, (0, 25, 255), 1)
-        #   cv.imshow("contours", frame)
+        else:
+            cv.drawContours(frame, contours, cnt, (255, 0, 255), 1)
+        #f = cv.cvtColor(f1, cv.COLOR_BGR2GRAY)
+        #diff = cv.absdiff(f, binary)
+        #cv.imshow("diff", diff)
+        cv.imshow("contours", frame)
     # 提取关键点
     keypoints = []
     detector = cv.SimpleBlobDetector_create(params)
     #keypoints = detector.detect(output7_inv)    #(binary) #  gray
     keypoints = detector.detect(binary) #  gray
-    print(len(keypoints))
+    keypoints1 = detector.detect(output7_inv) #  gray
+
+    print(len(keypoints), len(keypoints1))
     result = []
     blank = np.zeros((1, 1))
     if len(keypoints) > 0:
         result = cv.drawKeypoints(
             frame, keypoints, blank, (0, 0, 255), cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS
         )
-
+    if len(keypoints1) > 0:
+        result = cv.drawKeypoints(
+            frame, keypoints1, blank, (255, 0, 0), cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS
+        )
 #        for marker in keypoints:
 #            cv.circle(frame, (int(marker.pt[0]), int(marker.pt[1])), 3, (255, 0, 255), -1, 8)
 #            # cv.circle(frame, (int(marker.pt[0]), int(marker.pt[1])), int(marker.size/2), (0, 0, 255), 2, 1)
 #            print('size:', marker.size)
 #
 #            result = cv.drawMarker(frame, tuple(int(i) for i in marker.pt), color=(0, 255, 0))
-        cv.putText(result, str(len(keypoints)), (5, 20), cv.FONT_HERSHEY_PLAIN, 1.2, (0, 255, 0), 1)
+    if len(keypoints) > 0 or len(keypoints1) > 0:
+        cv.putText(result, str(len(keypoints)+len(keypoints1)), (5, 20), cv.FONT_HERSHEY_PLAIN, 1.2, (0, 255, 0), 1)
         cv.imshow("result", result)
         # cv.imwrite('temp/'+ color_t +'/result_' + file, result)
 
@@ -307,14 +334,13 @@ def process_blob(file, frame, binary, output7_inv):
 #img_path = 'F:\\project\\bottlecap\\SAMPLES OUTSIDE\\0326\\tr\\' #'F:\\project\\bottlecap\\Samples\\' + color_t + "\\"
 # img_files = os.listdir(img_path)
 #img_path = 'F:\\project\\bottlecap\\test1\\0529\\red\\'
-img_path = 'F:\\project\\bottlecap\\test1\\in\\green\\2024-06-14\\1\\resultNG\\'
-#img_path = 'F:\\project\\bottlecap\\test1\\0530\\Logo\\red\\2024-05-30\\1\\resultNG\\'
+img_path = 'F:\\project\\bottlecap\\test1\\in\\white\\2024-07-01\\1\\'
 
 max_Area = 5000
-color_t = 'green'
+color_t = 'white'
 work_path = 'temp/'+color_t
 minSize = 85
-sens = 6
+sens = 7
 rate = (11 - sens) / 5
 blockSize = 13
 C_V = 2
@@ -408,17 +434,17 @@ for img_file in img_files:
         vmin = 65#20
         vmax = 255
     elif color_t == 'white':
-        blur = 3#7
-        thres = 100#69
-        minSize = 45 * rate
+        blur = 3#3#7
+        thres = 51#100#69
+        minSize = 30 * rate #45
         max_Area = 9000
         blockSize = 9
         C_V = 3
         hmin = 0
         hmax = 221
         smin = 0
-        smax = 45#100
-        vmin = 67
+        smax = 25#38#100
+        vmin = 79#67
         vmax = 255
     elif color_t == 'trans':
         blur = 5#7
@@ -488,7 +514,7 @@ for img_file in img_files:
     fps = (1 / (now_time - prev_time))
     print("FPS: {:.3f}".format(fps))
     # debug
-    cv.waitKey(0)
+    # cv.waitKey(0)
     # debug
 
 cv.waitKey(1)

@@ -309,10 +309,10 @@ def process_blob(file,frame, binary, output7_inv):
     return result
 
 max_Area = 5000
-color_t = 'green'
+color_t = 'white'
 work_path = 'temp_o/'+color_t
-minSize = 85
-sens = 6
+minSize = 100
+sens = 7
 rate = (11 - sens) / 5
 
 blockSize = 11
@@ -327,7 +327,7 @@ if not os.path.exists(work_path):
 #img_path = 'F:\\project\\bottlecap\\20240217_outside\\white3900\\' #'F:\\project\\bottlecap\\Samples\\' + color_t + "\\"
 # img_path = 'F:\\project\\bottlecap\\Samples\\blue\\' #'F:\\project\\bottlecap\\Samples\\' + color_t + "\\"
 # img_path = 'F:\\project\\bottlecap\\SAMPLES OUTSIDE\\0326\\pink\\' #'F:\\project\\bottlecap\\Samples\\' + color_t + "\\"
-img_path = 'F:\\project\\bottlecap\\test1\\in\\green\\2024-06-15\\2\\resultG\\'
+img_path = 'F:\\project\\bottlecap\\test1\\in\white\\2024-07-01\\2\\'
 # img_files = os.listdir(img_path)
 img_files = [_ for _ in os.listdir(img_path) if (_.endswith('.jpg') or _.endswith('.png'))]
 for img_file in img_files:
@@ -381,12 +381,12 @@ for img_file in img_files:
         thres = 44
         blockSize = 11
         C_V = 7
-        minSize = 50 * rate
+        minSize = 100 * rate
         hmin = 3#30          #35  # 35
         hmax = 95#165         #108  # 77
-        smin = 28#26          #43  # 43
+        smin = 32#26          #43  # 43
         smax = 255#240         #220  # 255
-        vmin = 61#46          #42  # 46
+        vmin = 37#61#46          #42  # 46
         vmax = 255#210         #225  # 255
     elif color_t == 'pink':
         blur = 7
@@ -410,16 +410,16 @@ for img_file in img_files:
         vmax = 255         #255  # 255
     elif color_t == 'white':
         blur = 7  # 5
-        thres = 60  # 72 #112 #88
-        minSize = 45 * rate
+        thres = 100#60  # 72 #112 #88
+        minSize = 4 * rate
         max_Area = 9000
         blockSize = 9
         C_V = 3
         hmin = 0
-        hmax = 180  # 140
+        hmax = 221#180  # 140
         smin = 0
-        smax = 53  # 35
-        vmin = 22  # 200
+        smax = 31#34#53  # 35
+        vmin = 54#22  # 200
         vmax = 220
     elif color_t == 'trans':
         blur = 7
