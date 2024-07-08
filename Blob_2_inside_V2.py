@@ -216,7 +216,7 @@ def process_img(frame, mask):
     cv.imshow("O8", output8)
 
     output7_inv = cv.bitwise_or(binary, gray2)
-    #output7_inv = cv.bitwise_and(binary, output5)
+    # output7_inv = cv.bitwise_and(binary, output5)
     # if color_t == 'trans':
     #    output7_inv = cv.bitwise_not(output7_inv)
     output7_inv = cv.bitwise_and(output7_inv, black_b)
