@@ -246,13 +246,13 @@ def process_img(frame, mask):
     ret, diff = cv.threshold(diff, 127, 255, cv.THRESH_BINARY_INV)
     cv.imshow("diff", diff)
     print('r=',r)
-    cv.circle(diff, (int((cx1 + cx) / 2), cy), r-10, (0, 0, 0), 10)
+    cv.circle(diff, (int((cx1 + cx) / 2), cy), r-10, (0, 0, 0), 8)
     ret, diff = cv.threshold(diff, 127, 255, cv.THRESH_BINARY_INV)
     cv.imshow("diff1", diff)
 
     return diff, output7, binary    #output7_inv
 
-def process_blob(file, frame, binary, output7_inv):
+def process_blob(img, frame, binary, output7_inv):
     params = cv.SimpleBlobDetector_Params()
 
     # change thresholds
@@ -321,9 +321,13 @@ def process_blob(file, frame, binary, output7_inv):
     print(len(keypoints))
     blank = np.zeros((1, 1))
     if len(keypoints) > 0:
+        result_i = cv.drawKeypoints(
+            img, keypoints, blank, (0, 0, 255), cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS
+        )
         result = cv.drawKeypoints(
             frame, keypoints, blank, (0, 0, 255), cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS
         )
+
 #        for marker in keypoints:
 #            cv.circle(frame, (int(marker.pt[0]), int(marker.pt[1])), 3, (255, 0, 255), -1, 8)
 #            # cv.circle(frame, (int(marker.pt[0]), int(marker.pt[1])), int(marker.size/2), (0, 0, 255), 2, 1)
@@ -331,7 +335,8 @@ def process_blob(file, frame, binary, output7_inv):
 #
 #            result = cv.drawMarker(frame, tuple(int(i) for i in marker.pt), color=(0, 255, 0))
         cv.putText(result, str(len(keypoints)), (5, 20), cv.FONT_HERSHEY_PLAIN, 1.2, (0, 255, 0), 1)
-        cv.imshow("result", result)
+        cv.putText(result_i, str(len(keypoints)), (5, 20), cv.FONT_HERSHEY_PLAIN, 1.2, (0, 255, 0), 1)
+        cv.imshow("result", result_i)
         # cv.imwrite('temp/'+ color_t +'/result_' + file, result)
 
     return result
@@ -350,7 +355,7 @@ max_Area = 5000
 color_t = 'white'
 work_path = 'temp/'+color_t
 minSize = 85
-sens = 7
+sens = 6
 rate = (11 - sens) / 5
 blockSize = 13
 C_V = 2
@@ -509,12 +514,12 @@ for img_file in img_files:
     cv.imwrite('temp/'+color_t+ '_p/'+ img_file + '_b.png', img_bin)
     cv.imwrite('temp/' + color_t + '_p/' + img_file + '_o7.png', img_o7)
     # cv.imwrite('temp/'+color_t+ '_p/'+ img_file + '_o7_inv.png', img_o7_inv)
-    img_res = process_blob(img_file, frame_res, img_bin, img_o7_inv)
+    img_res = process_blob(frame,  frame_res, img_bin, img_o7_inv)
     white_pixels = cv.countNonZero(img_bin)
     print('pixels=', white_pixels)
     if len(img_res) > 0:
         cv.imwrite('temp/'+color_t+'/result_' + img_file + '.png', img_res)
-        cv.waitKey(0)
+        cv.waitKey(5000)
     else:
         if white_pixels < min_pixels:
             cv.imshow("all_zero", frame_res)
