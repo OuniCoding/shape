@@ -35,7 +35,7 @@ def process_img(frame):
     cv.imshow("gray2", gray2)
 
     # if color_t == 'black' or color_t == 'trans' or color_t == 'gold' or color_t == 'blue' or color_t == 'green' or color_t == 'red':
-    if color_t == 'gold':
+    if color_t == 'gold1':
         ret, binary = cv.threshold(gray2, thres, 255, cv.THRESH_BINARY)# + cv.THRESH_OTSU)
         #lower = np.array([6, 6, 6])  # 轉換成 NumPy 陣列，範圍稍微變小 ( 55->30, 70->40, 252->200 )
         #upper = np.array([27, 27, 25])  # 轉換成 NumPy 陣列，範圍稍微加大 ( 70->90, 80->100, 252->255 )
@@ -97,7 +97,9 @@ def process_img(frame):
     # 最小外接圓
     r = 462
     cx = 512
-    cy= 512
+    cy = 512
+    cx1 = 512
+    cy1 = 512
 
     for cnt in range(len(contours)):
         (x, y), radius = cv.minEnclosingCircle(contours[cnt])
@@ -115,6 +117,7 @@ def process_img(frame):
             r = radius
         # debug
         print('r=', r, 'r_m=', radius)
+        # r = radius
         # debug
         # cv.circle(black, center, radius,(255, 255, 255), -1)
         # 提取與繪制輪廓
@@ -177,11 +180,7 @@ def process_img(frame):
             cx1 = cx
         #if radius > dis: radius = dis
 
-        # cv.circle(black, (cx, cy), radius, (255, 255, 255), -1)
         cv.circle(black, (int((cx1 + cx) / 2), cy), radius, (255, 255, 255), -1)
-        # cv.circle(black, (cx, cy), dis, (255, 255, 255), -1)
-        # cv.circle(black, center, dis, (0, 255, 0), 2)
-        # cv.circle(black, (cx1, cy1), radius, (255, 255, 255), -1)
         cv.circle(black, (cx, cy), 5, (0, 255, 0), -1)
         cv.circle(black, (cx1, cy1), 2, (0, 0, 255), -1)
         # debug
@@ -261,7 +260,8 @@ def process_img(frame):
     ret, diff = cv.threshold(diff, 127, 255, cv.THRESH_BINARY_INV)
     cv.imshow("diff", diff)
     print('r=',r)
-    cv.circle(diff, (cx, cy), r-10, (0, 0, 0), 10)
+    # cv.circle(diff, (cx, cy), r-10, (0, 0, 0), 8)
+    cv.circle(diff, (int((cx1 + cx) / 2), cy), r - 10, (0, 0, 0), 8)
     ret, diff = cv.threshold(diff, 127, 255, cv.THRESH_BINARY_INV)
     cv.imshow("diff1", diff)
 
@@ -345,9 +345,9 @@ def process_blob(file,frame, binary, output7_inv):
         # cv.imwrite('temp_o/'+ color_t +' /result_' + file, result)
     return result
 
-color_t = 'trans'
+color_t = 'lightblue'
 work_path = 'temp_o/'+color_t
-sens = 7
+sens = 6
 
 param = set_blob_param(color_t, 'Settings/oblob-param.xml')
 max_Area = param[3]
@@ -376,7 +376,7 @@ if not os.path.exists(work_path):
 #img_path = 'F:\\project\\bottlecap\\20240217_outside\\white3900\\' #'F:\\project\\bottlecap\\Samples\\' + color_t + "\\"
 # img_path = 'F:\\project\\bottlecap\\Samples\\blue\\' #'F:\\project\\bottlecap\\Samples\\' + color_t + "\\"
 # img_path = 'F:\\project\\bottlecap\\SAMPLES OUTSIDE\\0326\\pink\\' #'F:\\project\\bottlecap\\Samples\\' + color_t + "\\"
-img_path = 'F:\\project\\bottlecap\\test1\\in\\trans\\2024-06-05\\2\\resultNG\\'
+img_path = 'F:\\project\\bottlecap\\test1\\in\\lightblue\\2024-07-10\\2\\resultG\\'
 # img_files = os.listdir(img_path)
 img_files = [_ for _ in os.listdir(img_path) if (_.endswith('.jpg') or _.endswith('.png'))]
 for img_file in img_files:
