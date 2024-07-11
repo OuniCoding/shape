@@ -6,11 +6,24 @@ import cv2 as cv
 import numpy as np
 import os
 import time
+import xml.etree.ElementTree as ET
 
+def set_blob_param(category,para_name):
+    param_file = ET.parse(para_name)
+    root = param_file.getroot()
+    id = 0
+    param = []
+    while root[0][id].tag != category:
+        id += 1
+    for i in range(0,13):
+        param.append(int(root[0][id][i].attrib['value']))
+
+    return param
 
 def process_img(frame):
     cv.imshow("input", frame)
-    gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
+    #gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
+    gray = frame.copy()
     #gray = cv.bitwise_not(gray)
     cv.imshow("gray", gray)
 
@@ -56,7 +69,8 @@ def process_img(frame):
         # return binary, output7, output9 #output7_inv
 
     else:
-        ret, binary = cv.threshold(gray2, thres, 255, cv.THRESH_BINARY)  # + cv.THRESH_OTSU)
+        #ret, binary = cv.threshold(gray2, thres, 255, cv.THRESH_BINARY)  # + cv.THRESH_OTSU)
+        ret, binary = cv.threshold(gray2, 128, 255, cv.THRESH_BINARY)  # + cv.THRESH_OTSU)
 
     contours, hierarchy = cv.findContours(binary, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
     black = cv.imread('black1024.jpg')
@@ -81,7 +95,10 @@ def process_img(frame):
         print(radius)
     """
     # 最小外接圓
-    r = 0
+    r = 462
+    cx = 512
+    cy= 512
+
     for cnt in range(len(contours)):
         (x, y), radius = cv.minEnclosingCircle(contours[cnt])
         center = (int(x), int(y))
@@ -328,16 +345,28 @@ def process_blob(file,frame, binary, output7_inv):
         # cv.imwrite('temp_o/'+ color_t +' /result_' + file, result)
     return result
 
-max_Area = 5000
-color_t = 'white'
+color_t = 'trans'
 work_path = 'temp_o/'+color_t
-minSize = 100
 sens = 7
-rate = (11 - sens) / 5
 
-blockSize = 11
-C_V = 2
-min_pixels = 610000
+param = set_blob_param(color_t, 'Settings/oblob-param.xml')
+max_Area = param[3]
+minSize = param[2] * (11 - sens) / 5
+# rate = (11 - sens) / 5
+
+blockSize = param[4]
+C_V = param[5]
+min_pixels = param[12]  #610000
+blur = param[0]
+thres = param[1]
+C_V = param[5]
+hmin = param[6]
+hmax = param[7]
+smin = param[8]
+smax = param[9]
+vmin = param[10]
+vmax = param[11]
+
 if not os.path.exists(work_path):
     os.makedirs(work_path)
     os.makedirs(work_path + '_p/')
@@ -347,7 +376,7 @@ if not os.path.exists(work_path):
 #img_path = 'F:\\project\\bottlecap\\20240217_outside\\white3900\\' #'F:\\project\\bottlecap\\Samples\\' + color_t + "\\"
 # img_path = 'F:\\project\\bottlecap\\Samples\\blue\\' #'F:\\project\\bottlecap\\Samples\\' + color_t + "\\"
 # img_path = 'F:\\project\\bottlecap\\SAMPLES OUTSIDE\\0326\\pink\\' #'F:\\project\\bottlecap\\Samples\\' + color_t + "\\"
-img_path = 'F:\\project\\bottlecap\\test1\\in\white\\2024-07-01\\2\\'
+img_path = 'F:\\project\\bottlecap\\test1\\in\\trans\\2024-06-05\\2\\resultNG\\'
 # img_files = os.listdir(img_path)
 img_files = [_ for _ in os.listdir(img_path) if (_.endswith('.jpg') or _.endswith('.png'))]
 for img_file in img_files:
@@ -359,120 +388,121 @@ for img_file in img_files:
     hsv = cv.cvtColor(frame, cv.COLOR_BGR2HSV)
     cv.imshow("HSV", hsv)
 
-    if color_t == 'red':
-        blur = 13
-        thres = 23#24
-        minSize = 50  * rate
-        blockSize = 9
-        C_V = 9
-        hmin = 0          #0  # 156
-        hmax = 15         #15   #20   #30   #181  # 180
-        smin = 73          #140  #80   #20  # 43
-        smax = 255         #255  #235  # 255
-        vmin = 60          #90  #46  # 46
-        vmax = 220         #255  #226  # 255
-    elif color_t == 'blue':
-        blur = 7
-        thres = 12            #19  # 35  #23
-        blockSize = 9
-        C_V = 9
-        minSize = 85 * rate
-        # 藍
-        hmin = 102         #100  # 109
-        hmax = 180         #144  # 124
-        smin = 100         #43
-        smax = 255         #255
-        vmin = 46          #46
-        vmax = 255          #255
-    elif color_t == 'gold':
-        blur = 11
-        thres = 40  # 23
-        blockSize = 3
-        C_V = 9
-        minSize = 85 * rate
-        hmin = 15  # 156
-        hmax = 70  #190  # 180
-        smin = 43   #15  # 43
-        smax = 235 #207  #235  # 255
-        vmin = 30  # 46
-        vmax = 255  # 255
-    elif color_t == 'green':
-        blur = 15
-        thres = 44
-        blockSize = 11
-        C_V = 7
-        minSize = 100 * rate
-        hmin = 3#30          #35  # 35
-        hmax = 95#165         #108  # 77
-        smin = 32#26          #43  # 43
-        smax = 255#240         #220  # 255
-        vmin = 37#61#46          #42  # 46
-        vmax = 255#210         #225  # 255
-    elif color_t == 'pink':
-        blur = 7
-        thres = 25  #64
-        minSize = 50 * rate
-        hmin = 68          #0  # 5
-        hmax = 255         #212  # 180
-        smin = 45         #5  # 43
-        smax = 235         #245  # 215  #255
-        vmin = 65         #38  # 46
-        vmax = 255         #245  # 255
-    elif color_t == 'lightblue':
-        blur = 11       #15
-        thres = 25      #40  #70  # 20
-        minSize = 45 * rate
-        hmin = 78          #78
-        hmax = 120         #120  # 108
-        smin = 71          #43
-        smax = 248         #238  # 255
-        vmin = 67          #67  # 46
-        vmax = 255         #255  # 255
-    elif color_t == 'white':
-        blur = 7  # 5
-        thres = 100#60  # 72 #112 #88
-        minSize = 4 * rate
-        max_Area = 9000
-        blockSize = 9
-        C_V = 3
-        hmin = 0
-        hmax = 221#180  # 140
-        smin = 0
-        smax = 31#34#53  # 35
-        vmin = 54#22  # 200
-        vmax = 220
-    elif color_t == 'trans':
-        blur = 7
-        thres = 10       #23  #58  # 19 #66
-        minSize = 40 * rate
-        max_Area = 7000
-        blockSize = 9
-        C_V = 10
-        hmin = 0           #0
-        hmax = 221         #180  # 140
-        smin = 0           #0
-        smax = 100         #53
-        vmin = 67          #22
-        vmax = 255         #200
-    else:  # black
-        blur = 11
-        thres = 128  # 240
-        minSize = 85  * rate
-        # color_t = color_t + '1'
-        hmin = 0
-        hmax = 36   #48  # 140
-        smin = 0
-        smax = 255
-        vmin = 55   #0
-        vmax = 98   #90  # 46
-        min_pixels = 0
+    ##if color_t == 'red':
+    ##    blur = 13
+    ##    thres = 23#24
+    ##    minSize = 50  * rate
+    ##    blockSize = 9
+    ##    C_V = 9
+    ##    hmin = 0          #0  # 156
+    ##    hmax = 15         #15   #20   #30   #181  # 180
+    ##    smin = 73          #140  #80   #20  # 43
+    ##    smax = 255         #255  #235  # 255
+    ##    vmin = 60          #90  #46  # 46
+    ##    vmax = 220         #255  #226  # 255
+    ##elif color_t == 'blue':
+    ##    blur = 7
+    ##    thres = 12            #19  # 35  #23
+    ##    blockSize = 9
+    ##    C_V = 9
+    ##    minSize = 85 * rate
+    ##    # 藍
+    ##    hmin = 102         #100  # 109
+    ##    hmax = 180         #144  # 124
+    ##    smin = 100         #43
+    ##    smax = 255         #255
+    ##    vmin = 46          #46
+    ##    vmax = 255          #255
+    ##elif color_t == 'gold':
+    ##    blur = 11
+    ##    thres = 40  # 23
+    ##    blockSize = 3
+    ##    C_V = 9
+    ##    minSize = 85 * rate
+    ##    hmin = 15  # 156
+    ##    hmax = 70  #190  # 180
+    ##    smin = 43   #15  # 43
+    ##    smax = 235 #207  #235  # 255
+    ##    vmin = 30  # 46
+    ##    vmax = 255  # 255
+    ##elif color_t == 'green':
+    ##    blur = 15
+    ##    thres = 44
+    ##    blockSize = 11
+    ##    C_V = 7
+    ##    minSize = 100 * rate
+    ##    hmin = 3#30          #35  # 35
+    ##    hmax = 95#165         #108  # 77
+    ##    smin = 32#26          #43  # 43
+    ##    smax = 255#240         #220  # 255
+    ##    vmin = 37#61#46          #42  # 46
+    ##    vmax = 255#210         #225  # 255
+    ##elif color_t == 'pink':
+    ##    blur = 7
+    ##    thres = 25  #64
+    ##    minSize = 50 * rate
+    ##    hmin = 68          #0  # 5
+    ##    hmax = 255         #212  # 180
+    ##    smin = 45         #5  # 43
+    ##    smax = 235         #245  # 215  #255
+    ##    vmin = 65         #38  # 46
+    ##    vmax = 255         #245  # 255
+    ##elif color_t == 'lightblue':
+    ##    blur = 11       #15
+    ##    thres = 25      #40  #70  # 20
+    ##    minSize = 45 * rate
+    ##    hmin = 78          #78
+    ##    hmax = 120         #120  # 108
+    ##    smin = 71          #43
+    ##    smax = 248         #238  # 255
+    ##    vmin = 67          #67  # 46
+    ##    vmax = 255         #255  # 255
+    ##elif color_t == 'white':
+    ##    blur = 7  # 5
+    ##    thres = 100#60  # 72 #112 #88
+    ##    minSize = 30 * rate
+    ##    max_Area = 9000
+    ##    blockSize = 9
+    ##    C_V = 3
+    ##    hmin = 0
+    ##    hmax = 221#180  # 140
+    ##    smin = 0
+    ##    smax = 31#34#53  # 35
+    ##    vmin = 54#22  # 200
+    ##    vmax = 220
+    ##elif color_t == 'trans':
+    ##    blur = 7
+    ##    thres = 10       #23  #58  # 19 #66
+    ##    minSize = 40 * rate
+    ##    max_Area = 7000
+    ##    blockSize = 9
+    ##    C_V = 10
+    ##    hmin = 0           #0
+    ##    hmax = 221         #180  # 140
+    ##    smin = 0           #0
+    ##    smax = 100         #53
+    ##    vmin = 67          #22
+    ##    vmax = 255         #200
+    ##else:  # black
+    ##    blur = 11
+    ##    thres = 128  # 240
+    ##    minSize = 85  * rate
+    ##    # color_t = color_t + '1'
+    ##    hmin = 0
+    ##    hmax = 36   #48  # 140
+    ##    smin = 0
+    ##    smax = 255
+    ##    vmin = 55   #0
+    ##    vmax = 98   #90  # 46
+    ##    min_pixels = 0
 
     hsv_low = np.array([hmin, smin, vmin])
     hsv_high = np.array([hmax, smax, vmax])
     mask = cv.inRange(hsv, hsv_low, hsv_high)
     frame_res = cv.bitwise_and(frame, frame, mask=mask)
+    cv.imshow("binary", mask)
 
-    img_bin, img_o7, img_o7_inv = process_img(frame_res)
+    img_bin, img_o7, img_o7_inv = process_img(mask)#(frame_res)
 
     cv.imwrite('temp_o/'+color_t+ '_p/'+ img_file + '_b.png', img_bin)
     cv.imwrite('temp_o/' + color_t + '_p/' + img_file + '_o7.png', img_o7)

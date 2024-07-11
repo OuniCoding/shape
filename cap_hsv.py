@@ -1,8 +1,20 @@
 import cv2
 import numpy as np
+import xml.etree.ElementTree as ET
 
+def set_blob_param(category,para_name):
+    param_file = ET.parse(para_name)
+    root = param_file.getroot()
+    id = 0
+    param = []
+    while root[0][id].tag != category:
+        id += 1
+    for i in range(0,13):
+        param.append(int(root[0][id][i].attrib['value']))
+
+    return param
 #image = cv2.imread('F:\\project\\bottlecap\\test1\\Image_20240621113923008.jpg')
-image = cv2.imread('F:\\project\\bottlecap\\test1\\in\\white\\2024-07-01\\2\\resultG\\20240701_14-41-11_239.jpg')
+image = cv2.imread('F:\\project\\bottlecap\\test1\\in\\trans\\2024-07-10\\2\\resultG\\20240710_13-59-43_604.jpg')
 #white 20240701_13-12-24_768.jpg  20240701_13-12-32_433.jpg  20240701_13-15-28_630.jpg
 # 20240701_13-15-29_786.jpg  20240701_13-17-14_242.jpg  20240701_13-17-25_371.jpg  20240701_13-23-00_074.jpg
 # 20240701_13-31-28_027.jpg  20240701_13-31-30_231.jpg  20240701_13-31-33_614.jpg
@@ -13,13 +25,16 @@ image = cv2.imread('F:\\project\\bottlecap\\test1\\in\\white\\2024-07-01\\2\\res
 # 20240701_13-38-23_540.jpg
 
 cv2.imshow('BGR', image)
-
+param = set_blob_param('trans', 'Settings/oblob-param.xml')
 #white in
 #hsv_low = np.array([0, 0, 98])
 #hsv_high = np.array([221, 38, 255])
 #white out
-hsv_low = np.array([0, 0, 54])
-hsv_high = np.array([221, 31, 220])
+#hsv_low = np.array([0, 0, 54])
+#hsv_high = np.array([221, 31, 220])
+
+hsv_low = np.array([param[6], param[8], param[10]])
+hsv_high = np.array([param[7], param[9], param[11]])
 
 def h_low(value):
     hsv_low[0] = value
