@@ -96,7 +96,7 @@ def process_img(frame, mask):
         print(radius)
     """
     # 最小外接圓
-    r = 521
+    r = 516
     cx = 560
     cy= 560
     cx1 = 560
@@ -108,8 +108,8 @@ def process_img(frame, mask):
         radius = int(radius)
         if radius < 500:
             continue
-        if radius > 535:
-            radius = 521
+        if radius > 520:    #535:
+            radius = 516    #521
         #cv.circle(black, center, radius,(255, 255, 255), -1)
         if radius > r:
             r = radius
@@ -173,7 +173,7 @@ def process_img(frame, mask):
             print('c1x=', cx)
         #if radius > dis: radius = dis
 
-        cv.circle(black, (int((cx1+cx)/2), cy), radius , (255, 255, 255), -1)
+        cv.circle(black, (int((cx+cx1)/2), cy), radius , (255, 255, 255), -1)
         #cv.circle(black, (cx1, cy1), radius, (255, 255, 255), -1)
         cv.circle(black, (cx, cy), 5, (0, 255, 0), -1)
         cv.circle(black, (cx1, cy1), 2, (0, 0, 255), -1)
@@ -285,7 +285,7 @@ def process_blob(img, frame, binary, output7_inv):
     params.minDistBetweenBlobs = 10
 
     # filter by color
-    params.filterByColor = True
+    params.filterByColor = False    #True
     params.blobColor = 0
 
     # filter by area
@@ -299,8 +299,8 @@ def process_blob(img, frame, binary, output7_inv):
     params.maxCircularity = 150
 
     # Filter by Convexity
-    params.filterByConvexity = True
-    params.minConvexity = 0.01
+    params.filterByConvexity = False    #True
+    params.minConvexity = 0.1   #0.01
 
     # Filter by Inertia
     params.filterByInertia = False  #True
@@ -357,7 +357,9 @@ def process_blob(img, frame, binary, output7_inv):
 
     return result
 
-color_t = 'green'
+img_path = 'F:\\project\\bottlecap\\test1\\in\\blue\\2024-07-10\\1\\resultG\\'
+
+color_t = 'blue'
 work_path = 'temp/'+color_t
 sens = 6
 
@@ -379,7 +381,6 @@ smax = param[9]
 vmin = param[10]
 vmax = param[11]
 
-img_path = 'F:\\project\\bottlecap\\test1\\in\\green\\2024-07-10\\1\\resultG\\'
 
 if not os.path.exists(work_path):
     os.makedirs(work_path)

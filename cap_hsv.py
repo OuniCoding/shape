@@ -1,4 +1,5 @@
 import cv2
+import os
 import numpy as np
 import xml.etree.ElementTree as ET
 
@@ -14,18 +15,15 @@ def set_blob_param(category,para_name):
 
     return param
 #image = cv2.imread('F:\\project\\bottlecap\\test1\\Image_20240621113923008.jpg')
-image = cv2.imread('F:\\project\\bottlecap\\test1\\in\\green\\2024-07-10\\1\\resultNG\\20240710_14-17-13_112.jpg')
-#white 20240701_13-12-24_768.jpg  20240701_13-12-32_433.jpg  20240701_13-15-28_630.jpg
-# 20240701_13-15-29_786.jpg  20240701_13-17-14_242.jpg  20240701_13-17-25_371.jpg  20240701_13-23-00_074.jpg
-# 20240701_13-31-28_027.jpg  20240701_13-31-30_231.jpg  20240701_13-31-33_614.jpg
-# 20240701_13-31-44_965.jpg  20240701_13-31-56_972.jpg  20240701_13-32-02_670.jpg
-# 20240701_13-32-52_748.jpg  20240701_13-33-04_091.jpg  20240701_13-33-06_541.jpg
-# 20240701_13-36-14_796.jpg  20240701_13-36-33_278.jpg  20240701_13-36-40_835.jpg
-# 20240701_13-36-55_281.jpg  20240701_13-37-28_807.jpg  20240701_13-37-34_699.jpg
-# 20240701_13-38-23_540.jpg
+img_path = 'F:\\project\\bottlecap\\test1\\in\\blue\\2024-07-10\\1\\resultNG\\'
+
+img_files = [_ for _ in os.listdir(img_path) if (_.endswith('.jpg') or _.endswith('.png'))]
+img_file = img_files[0]
+#image = cv2.imread('D:\\project\\bottlecap\\test1\\in\\green\\2024-07-10\\1\\resultG\\20240710_14-31-31_029.jpg')
+image = cv2.imread(img_path+img_file)
 
 cv2.imshow('BGR', image)
-param = set_blob_param('green', 'Settings/iblob-param.xml')
+param = set_blob_param('blue', 'Settings/iblob-param.xml')
 #white in
 #hsv_low = np.array([0, 0, 98])
 #hsv_high = np.array([221, 38, 255])
@@ -64,11 +62,31 @@ cv2.setTrackbarPos('H high', 'image', hsv_high[0])
 cv2.setTrackbarPos('S high', 'image', hsv_high[1])
 cv2.setTrackbarPos('V high', 'image', hsv_high[2])
 
+index=0
 while True:
     dst = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
     dst = cv2.inRange(dst, hsv_low, hsv_high)
     cv2.imshow('dst', dst)
-    if cv2.waitKey(1) & 0xff == ord('q'):
+    key = cv2.waitKeyEx(1)
+    if key & 0xff == ord('q'):
         break
+    elif key == 2490368 or key == 2424832:
+        index -= 1;
+        if index < 0:
+            index = len(img_files)-1
+        img_file = img_files[index]
+        # image = cv2.imread('D:\\project\\bottlecap\\test1\\in\\green\\2024-07-10\\1\\resultG\\20240710_14-31-31_029.jpg')
+        image = cv2.imread(img_path+img_file)
+        print(img_file)
+    elif key == 2621440 or key == 2555904:
+        index += 1;
+        if index >= len(img_files):
+            index = 0
+        img_file = img_files[index]
+        # image = cv2.imread('D:\\project\\bottlecap\\test1\\in\\green\\2024-07-10\\1\\resultG\\20240710_14-31-31_029.jpg')
+        image = cv2.imread(img_path+img_file)
+        cv2.imshow('BGR', image)
+        print(img_file)
+
 cv2.destroyAllWindows()
 
