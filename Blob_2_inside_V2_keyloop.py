@@ -20,7 +20,7 @@ def set_blob_param(category,para_name):
 
     return param
 
-def process_img(frame, mask):
+def process_img(frame, mask, nW, nH):
     frame= cv.addWeighted(frame, 0.8, frame, 0, 0)  # 0517 bright
     cv.imshow("input", frame)
     #gray = cv.cvtColor(frame, cv.COLOR_RGB2GRAY)
@@ -75,7 +75,7 @@ def process_img(frame, mask):
 
     contours, hierarchy = cv.findContours(binary, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE) #cv.RETR_EXTERNAL
     black = cv.imread('black1120.jpg')
-    black = cv.resize(black, (936, 936))
+    black = cv.resize(black, (nW, nH))
     amount = 0
     """    
     # 最大內接圓
@@ -98,15 +98,15 @@ def process_img(frame, mask):
     """
     # 最小外接圓
     r = param[13]   #516 #0
-    cx = 468    #560
-    cy = 468    #560
-    cx1 = 468   #560
-    cy1 = 468   #560
+    cx = int(nW/2)  #560
+    cy = int(nH/2)  #560
+    cx1 = cx    #560
+    cy1 = cy    #560
     for cnt in range(len(contours)):
         (x, y), radius = cv.minEnclosingCircle(contours[cnt])
         center = (int(x), int(y))
         radius = int(radius)
-        if radius < (r-6):  #400: #500:
+        if radius < (r-6):  #500:
             continue
         # debug
         print('radius=',radius)
@@ -143,8 +143,8 @@ def process_img(frame, mask):
         # looking bottom coordinate
         y_max = 0
         x_max = 0
-        y_min = 936 #1120
-        x_min = 936 #1120
+        y_min = nH  #1120
+        x_min = nW  #1120
         y = 0
         x = 0
         dis_max = 0
@@ -251,7 +251,7 @@ def process_img(frame, mask):
     ret, black_a = cv.threshold(binary, 1, 255, cv.THRESH_BINARY)
     #circles = cv.HoughCircles(black_a, cv.HOUGH_GRADIENT, 1, 250, param1=100, param2=30, minRadius=0, maxRadius=0)
     black = cv.imread('black1120.jpg')
-    black = cv.resize(black, (936, 936))
+    black = cv.resize(black, (nW, nH))
     black_a = cv.cvtColor(black, cv.COLOR_BGR2GRAY)
     ret, black_a = cv.threshold(black_a, 1, 255, cv.THRESH_BINARY)
     #1if circles is not None:
@@ -279,6 +279,8 @@ def process_img(frame, mask):
     return diff, output7, binary    #output7_inv
 
 def process_blob(file, frame, binary, output7_inv):
+    edges_process(frame, output7_inv)
+
     params = cv.SimpleBlobDetector_Params()
 
     # change thresholds
@@ -362,15 +364,76 @@ def process_blob(file, frame, binary, output7_inv):
 
     return result
 
-#img_path = 'F:\\project\\bottlecap\\20240217_outside\\red16500\\' #'F:\\project\\bottlecap\\Samples\\' + color_t + "\\"
-#img_path = 'F:\\project\\bottlecap\\20240217_outside\\blue16500\\' #'F:\\project\\bottlecap\\Samples\\' + color_t + "\\"
-#img_path = 'F:\\project\\bottlecap\\20240217_outside\\green12000\\' #'F:\\project\\bottlecap\\Samples\\' + color_t + "\\"
-#img_path = 'F:\\project\\bottlecap\\20240217_outside\\white3900\\' #'F:\\project\\bottlecap\\Samples\\' + color_t + "\\"
-#img_path = 'F:\\project\\bottlecap\\Samples\\black\\' #'F:\\project\\bottlecap\\Samples\\' + color_t + "\\"
+def edges_process(image, gray):
+    max_distance = 40
+    min_distance = 3
+
+    edges = cv.Canny(gray, 50, 150)
+
+    contours,_ = cv.findContours(edges, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
+    contour_img = np.zeros_like(image)
+
+    cv.drawContours(contour_img, contours, -1, (255, 255, 255), -1)
+
+    gray = cv.cvtColor(contour_img, cv.COLOR_BGR2GRAY)
+
+    corners = cv.cornerHarris(gray, 4, 5, 0.04)
+
+    threshold = 0.5*corners.max()
+    corners = cv.dilate(corners, None)
+    #image[corners > threshold] = [0, 255, 0]
+    contour_img[corners > threshold] = [0, 0, 255]
+    corner_points = np.argwhere(corners > threshold)
+    #處理剔除相近的點
+    for i in range(len(corner_points) - 1, 0, -1):
+        if corner_points[i][0] == corner_points[i - 1][0]:
+            corner_points = np.delete(corner_points, i, 0)
+    for i in range(len(corner_points) - 1, 0, -1):
+        if corner_points[i][1] == corner_points[i - 1][1]:
+            corner_points = np.delete(corner_points, i, 0)
+
+    #print(corner_points)
+
+    slopes=[]
+    for i in range(len(corner_points)):
+        for j in range(i+1, len(corner_points)):
+            y1, x1 = corner_points[i]
+            y2, x2 = corner_points[j]
+            distance = np.sqrt((x2-x1)**2+(y2-y1)**2)
+            #if distance < max_distance and distance >= min_distance:
+            if distance >= min_distance:
+                if x2 - x1 == 0:
+                    slope = float('inf')
+                elif y2 - y1 == 0:
+                    slope = float('-inf')
+                else:
+                    slope = (y2-y1)/(x2-x1)
+                    # print(corner_points[i], corner_points[j])
+                    #cv.line(contour_img, (x1,y1), (x2,y2), (0, 0, 255), 1)
+
+                slopes.append(slope)
+        #cv.circle(contour_img, (x1,y1), 5, [0, 255, 0], 1)
+
+    slopes = [slope for slope in slopes if slope != float('inf') and slope != float('-inf')]
+    slopes.sort()
+
+    if len(slopes) >= 2:
+        max_slope = max(abs(slopes[-2]), abs(slopes[1]))
+        min_slope = min(abs(slopes[-2]), abs(slopes[1]))
+    else:
+        max_slope = float('-inf')
+        min_slope = float('inf')
+    print('Corners=', len(corner_points), 'Slope cnt=', len(slopes))
+    print('max slope=', max_slope)
+    print('min slope=', min_slope)
+    cv.putText(contour_img, str(len(corner_points))+' '+str(len(slopes)), (5, 20), cv.FONT_HERSHEY_PLAIN, 1.2, (0, 255, 0), 1)
+    cv.imshow('Contours_IMAGE', contour_img)
+
+
 #img_path = 'F:\\project\\bottlecap\\SAMPLES OUTSIDE\\0326\\tr\\' #'F:\\project\\bottlecap\\Samples\\' + color_t + "\\"
 # img_files = os.listdir(img_path)
 #img_path = 'F:\\project\\bottlecap\\test1\\0529\\red\\'
-img_path = 'F:\\project\\bottlecap\\test1\\in\\white\\2024-07-17\\1\\resultG\\'
+img_path = 'D:\\project\\bottlecap\\test1\\in\\0717\\'    #white\\2024-07-15\\1\\resultG\\'
 
 color_t = 'white'
 work_path = 'temp/'+color_t
@@ -427,7 +490,16 @@ while True:
         #cv.imshow('mask', mask)
         frame_res = cv.bitwise_and(frame, frame, mask=mask)
 
-    img_bin, img_o7, img_o7_inv = process_img(frame_res, mask)
+    img_bin, img_o7, img_o7_inv = process_img(frame_res, mask, frame.shape[1], frame.shape[0])
+
+    # 極座標處理
+    polar_img = cv.linearPolar(img_o7_inv, (img_o7.shape[1] // 2, img_o7.shape[0] // 2), img_o7.shape[1] // 2 + 10,
+                           cv.WARP_FILL_OUTLIERS)
+    edges = cv.Canny(polar_img, 50, 150)
+    # cv.imwrite('temp_o/'+color_t+ 'polar'+ img_file + '_b.png', polar_img)
+    # cv.imwrite('temp_o/'+color_t+ 'edges'+ img_file + '_b.png', edges)
+
+    # edges_process(frame_res, img_o7_inv)
 
     cv.imwrite('temp/'+color_t+ '_p/'+ img_file + '_b.png', img_bin)
     cv.imwrite('temp/' + color_t + '_p/' + img_file + '_o7.png', img_o7)
