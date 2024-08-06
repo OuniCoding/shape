@@ -21,7 +21,7 @@ def set_blob_param(category,para_name):
     return param
 
 def process_img(frame, mask, nW, nH):
-    frame= cv.addWeighted(frame, 0.8, frame, 0, 0)  # 0517 bright
+    # frame= cv.addWeighted(frame, 0.8, frame, 0, 0)  # 0517 bright
     cv.imshow("input", frame)
     #gray = cv.cvtColor(frame, cv.COLOR_RGB2GRAY)
     gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
@@ -38,8 +38,103 @@ def process_img(frame, mask, nW, nH):
     # if color_t == 'black' or color_t == 'trans' or color_t == 'gold' or color_t == 'blue' or color_t == 'green' or color_t == 'red':
     if color_t == 'black':
         ret, binary = cv.threshold(gray2, thres, 255, cv.THRESH_BINARY)# + cv.THRESH_OTSU)
-        lower = np.array([0, 0, 55])  # 轉換成 NumPy 陣列，範圍稍微變小 ( 55->30, 70->40, 252->200 )
-        upper = np.array([36, 255, 98])  # 轉換成 NumPy 陣列，範圍稍微加大 ( 70->90, 80->100, 252->255 )
+
+        contours, hierarchy = cv.findContours(binary, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)  # cv.RETR_EXTERNAL cv.RETR_TREE
+        black = cv.imread('black1120.jpg')
+        black = cv.resize(black, (nW, nH))
+        # 最小外接圓
+        r = param[13]  # 516 #0
+        cx = int(nW / 2)  # 560
+        cy = int(nH / 2)  # 560
+        cx1 = cx  # 560
+        cy1 = cy  # 560
+        for cnt in range(len(contours)):
+            (x, y), radius = cv.minEnclosingCircle(contours[cnt])
+            center = (int(x), int(y))
+            radius = int(radius)
+            if radius < (r - 6):  # 500:
+                continue
+            # debug
+            print('radius=', radius)
+            # debug
+            if radius > (r + 6):  # 520:    #535:
+                radius = param[13]  # 516    #521    #515~516
+            # cv.circle(black, center, radius,(255, 255, 255), -1)
+            if radius > r:
+                r = radius
+            print('r=', r, 'r_m=', radius)
+            # 提取與繪制輪廓
+            # cv.drawContours(frame, contours, cnt, (0, 255, 0), -1)
+            # 輪廓逼近
+            epsilon = 0.001 * cv.arcLength(contours[cnt], True)
+            approx = cv.approxPolyDP(contours[cnt], epsilon, True)
+
+            # print("approx=",approx)     # 輪廓邊線座標
+
+            # 求解中心位置
+            mm = cv.moments(contours[cnt])
+            # print(corners,shape_type, mm)
+            try:
+                if True:
+                    cx = int(mm['m10'] / mm['m00'])
+                    cy = int(mm['m01'] / mm['m00'])
+            except:
+                continue
+
+            # 分析幾何形狀
+            corners = len(approx)
+            # looking bottom coordinate
+            y_max = 0
+            x_max = 0
+            y_min = nH  # 1120
+            x_min = nW  # 1120
+            y = 0
+            x = 0
+            dis_max = 0
+            for c in range(corners):
+                [xy] = approx[c]
+                y = xy[1:2]
+                x = xy[:1]
+                # cv.circle(black, (int(x), int(y)), 5, (0, 255, 0), -1)
+                # cv.line(black, (int(x), int(y)), (cx, cy), (0, 0, 255), 1)
+                if y > y_max:  # x > x_max :  #
+                    y_max = int(y)
+                    x_max = int(x)
+                    [xy_previous] = approx[c - 1]
+                if y < y_min:
+                    y_min = int(y)
+                    x_min = int(x)
+
+            dis = int((((x_max - x_min) ** 2 + (y_max - y_min) ** 2) ** 0.5) / 2 * 1)
+            print(x_max, y_max, x_min, y_min, dis)
+            d_x = abs((x_max - x_min) / 2)
+            d_y = abs((y_max - y_min) / 2)
+            if x_max > x_min:
+                cx1 = int(x_min + d_x)
+            else:
+                cx1 = int(x_max + d_x)
+            cy1 = int(y_min + d_y)
+            print('cx1=', cx1, ' cy1=', cy1)
+            print('cx=', cx, 'cy=', cy)
+            if (x_max > cx and x_min > cx) or (x_max < cx and x_min < cx):
+                cx1 = cx
+                print('c1x=', cx)
+
+            cv.circle(black, (cx, cy), radius, (255, 255, 255), -1)
+            cv.circle(black, (cx, cy), 5, (0, 255, 0), -1)
+            cv.circle(black, (cx1, cy1), 2, (0, 0, 255), -1)
+
+        cv.imshow("f", black)
+        black_b = cv.cvtColor(black, cv.COLOR_BGR2GRAY)
+        ret, black_b = cv.threshold(black_b, 1, 255, cv.THRESH_BINARY)
+        cv.imshow("b", black_b)
+        cv.imshow("BI", binary)
+        binary = cv.bitwise_or(binary, black_b)
+
+        #lower = np.array([0, 0, 55])  # 轉換成 NumPy 陣列，範圍稍微變小 ( 55->30, 70->40, 252->200 )
+        #upper = np.array([36, 255, 98])  # 轉換成 NumPy 陣列，範圍稍微加大 ( 70->90, 80->100, 252->255 )
+        lower = np.array([0, 0, 60])  # 轉換成 NumPy 陣列，範圍稍微變小 ( 55->30, 70->40, 252->200 )
+        upper = np.array([132, 73, 100])  # 轉換成 NumPy 陣列，範圍稍微加大 ( 70->90, 80->100, 252->255 )
         output = cv.inRange(frame, lower, upper)   # 取得顏色範圍的顏色
         cv.imshow("O", output)
         kernel = cv.getStructuringElement(cv.MORPH_RECT, (blur, blur))  # 設定膨脹與侵蝕的參數
@@ -47,7 +142,8 @@ def process_img(frame, mask, nW, nH):
         output = cv.erode(output, kernel)        # 縮小影像，還原大小
         output9 = cv.bitwise_and(gray2, gray, mask=output)
         #cv.imshow("O9", output9)
-        ret, output9 = cv.threshold(output9, 7, 255, cv.THRESH_BINARY_INV)
+        #ret, output9 = cv.threshold(output9, 7, 255, cv.THRESH_BINARY_INV)
+        ret, output9 = cv.threshold(output9, 50, 255, cv.THRESH_BINARY)
         cv.imshow("O9", output9)
 
         cv.imshow("BIN", binary)
@@ -60,20 +156,17 @@ def process_img(frame, mask, nW, nH):
         cv.imshow("O8", output8)
 
         output7_inv = cv.bitwise_or(binary, output5)   #(binary, gray2) #
-        #output7_inv = cv.subtract(binary, gray2) #(output5, output7)
-        # if color_t == 'trans':
-        #    output7_inv = cv.bitwise_not(output7_inv)
 
         cv.imshow("O7_inv", output7_inv)
 
-
-        return binary, output7, output9 #output7_inv # output #,
+        #return binary, output7, output9 #output7_inv # output #,
+        return output9, output7, binary
 
     else:
         ret, binary = cv.threshold(gray2, thres, 255, cv.THRESH_BINARY)  # + cv.THRESH_OTSU)
 
 
-    contours, hierarchy = cv.findContours(binary, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE) #cv.RETR_EXTERNAL
+    contours, hierarchy = cv.findContours(binary, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE) #cv.RETR_EXTERNAL cv.RETR_TREE
     black = cv.imread('black1120.jpg')
     black = cv.resize(black, (nW, nH))
     amount = 0
@@ -230,7 +323,9 @@ def process_img(frame, mask, nW, nH):
     black_b = cv.cvtColor(black, cv.COLOR_BGR2GRAY)
     ret, black_b = cv.threshold(black_b, 1, 255, cv.THRESH_BINARY)
     cv.imshow("b", black_b)
+    cv.imshow("BI", binary)
     binary = cv.bitwise_and(binary, black_b)
+    # binary = cv.bitwise_and(binary, mask)
 
     cv.imshow("BIN", binary)
     output5 = cv.adaptiveThreshold(gray2, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY, blockSize, C_V)
@@ -278,8 +373,9 @@ def process_img(frame, mask, nW, nH):
 
     return diff, output7, binary    #output7_inv
 
-def process_blob(file, frame, binary, output7_inv):
-    edges_process(frame, output7_inv)
+def process_blob(file, frame, binary, o7_inv):
+    if color_t != 'black':
+        edges_process(frame, o7_inv)
 
     params = cv.SimpleBlobDetector_Params()
 
@@ -307,14 +403,14 @@ def process_blob(file, frame, binary, output7_inv):
     params.maxCircularity = 150
 
     # Filter by Convexity
-    params.filterByConvexity = False #True
+    params.filterByConvexity = True
     params.minConvexity = 0.1
 
     # Filter by Inertia
     params.filterByInertia = False  #True
     params.minInertiaRatio = 0.01    #0.5
 
-    # contours, hierarchy = cv.findContours(binary, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
+    # contours, hierarchy = cv.findContours(binary1, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
     # contours, hierarchy = cv.findContours(output9, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
     #contours, hierarchy = cv.findContours(output7_inv, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
     contours, hierarchy = cv.findContours(binary, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
@@ -323,17 +419,15 @@ def process_blob(file, frame, binary, output7_inv):
         # debug
         # print(cnt, ':', area)
         # debug
-        if area >= minSize and area <= max_Area:     # trans:7000
-            # 提取與繪制輪廓
-            cv.drawContours(frame, contours, cnt, (0, 0, 0), -1) #binary
-            #cv.imshow("contours", frame)
-            print(cnt,':', area)
-            #debug cv.waitKey(1)
-        else:
-            cv.drawContours(frame, contours, cnt, (255, 0, 255), 1)
-        #f = cv.cvtColor(f1, cv.COLOR_BGR2GRAY)
-        #diff = cv.absdiff(f, binary)
-        #cv.imshow("diff", diff)
+        if color_t != 'black':
+            if area >= minSize and area <= max_Area:     # trans:7000
+                # 提取與繪制輪廓
+                cv.drawContours(frame, contours, cnt, (0, 0, 0), -1) #binary1
+                #cv.imshow("contours", frame)
+                print(cnt,':', area)
+                #debug cv.waitKey(1)
+            else:
+                cv.drawContours(frame, contours, cnt, (255, 0, 255), 1)
         cv.imshow("contours", frame) #binary
 
     result = []
@@ -345,8 +439,11 @@ def process_blob(file, frame, binary, output7_inv):
     keypoints = []
     detector = cv.SimpleBlobDetector_create(params)
     #keypoints = detector.detect(output7_inv)    #(binary) #  gray
-    keypoints = detector.detect(binary) #  gray
-    print(len(keypoints))
+    if color_t != 'black':
+        keypoints = detector.detect(binary) #  gray
+    else:
+        keypoints = detector.detect(o7_inv)
+    print('keypoints=',len(keypoints))
     blank = np.zeros((1, 1))
     if len(keypoints) > 0:
         result = cv.drawKeypoints(
@@ -433,9 +530,9 @@ def edges_process(image, gray):
 #img_path = 'F:\\project\\bottlecap\\SAMPLES OUTSIDE\\0326\\tr\\' #'F:\\project\\bottlecap\\Samples\\' + color_t + "\\"
 # img_files = os.listdir(img_path)
 #img_path = 'F:\\project\\bottlecap\\test1\\0529\\red\\'
-img_path = 'D:\\project\\bottlecap\\test1\\in\\0717\\'    #white\\2024-07-15\\1\\resultG\\'
+img_path = 'D:\\project\\bottlecap\\test1\\in\\all\\' #black\\2024-06-05\\1\\resultG\\'
 
-color_t = 'white'
+color_t = 'red'
 work_path = 'temp/'+color_t
 sens = 8
 
@@ -482,7 +579,7 @@ while True:
     cv.imshow('mask', mask)
 
     if color_t == 'black':
-        frame_res = frame
+        frame_res = frame.copy()
     else:
         #hsv_low = np.array([hmin, smin, vmin])
         #hsv_high = np.array([hmax, smax, vmax])
@@ -507,7 +604,11 @@ while True:
     img_res = process_blob(img_file, frame_res, img_bin, img_o7_inv)
     white_pixels = cv.countNonZero(img_bin)
     print('pixels=', white_pixels)
-    if len(img_res) > 0:
+    if color_t == 'black':
+        if white_pixels < min_pixels or white_pixels > 100000:
+            cv.imshow("NGblack", frame)
+            cv.imwrite('temp/' + color_t + '/result_' + img_file, frame)
+    elif len(img_res) > 0:
         cv.imwrite('temp/'+color_t+'/result_' + img_file + '.png', img_res)
     else:
         if white_pixels < min_pixels:
