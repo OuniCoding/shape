@@ -277,7 +277,8 @@ def process_img(frame, mask, nW, nH):
     # cv.waitKey(0)
     # debug
     #1 return binary, output7, output7_inv
-    return diff, output7, binary
+    #240822 return diff, output7, binary
+    return diff, output7, binary, (int((cx1 + cx) / 2), cy)
 
 def process_blob(img,frame, binary, output7_inv):
     #edges_process(frame, output7_inv)
@@ -359,10 +360,11 @@ def process_blob(img,frame, binary, output7_inv):
         # cv.imwrite('temp_o/'+ color_t +' /result_' + file, result)
     return result
 
-def edges_process(image, gray):
+#240822 def edges_process(image, gray):
+def edges_process(image, gray, center):
     max_distance = 40
-    min_distance = 3
-    min_slope = 0.4
+    min_distance = 300  #240822 3
+    min_slope = 0.1
 
     edges = cv.Canny(gray, 50, 150)
 
@@ -375,7 +377,7 @@ def edges_process(image, gray):
     # gray = cv.cvtColor(contour_img, cv.COLOR_BGR2GRAY)
     cv.imshow("drawC1", gray)
 
-    corners = cv.cornerHarris(gray, 4, 5, 0.04)
+    corners = cv.cornerHarris(gray, 2, 3, 0.04)
     print(corners.shape, corners.max())
     threshold = 0.5*corners.max()
     corners = cv.dilate(corners, None)
@@ -398,37 +400,63 @@ def edges_process(image, gray):
     slopes=[]
     slopes_point = []
     for i in range(len(corner_points)):
-        #for j in range(i+1, len(corner_points)):
-        j = i+1
-        if j < len(corner_points):
-            y1, x1 = corner_points[i]
-            y2, x2 = corner_points[j]
-            distance = np.sqrt((x2-x1)**2+(y2-y1)**2)
-            # print(distance,end=', ')
-            #if distance < max_distance and distance >= min_distance:
-            if distance >= min_distance:
-                if x2 - x1 == 0:
-                    slope = float('inf')
-                elif y2 - y1 == 0:
-                    slope = float('-inf')
-                else:
-                    slope = (y2-y1)/(x2-x1)
-                    print(abs(slope), corner_points[i])
-                    if abs(slope) < min_slope:
-                        break
-                    # print(corner_points[i], corner_points[j])
-                    #cv.line(contour_img, (x1,y1), (x2,y2), (0, 0, 255), 1)
+        (x2, y2) = center
+        y1, x1 = corner_points[i]
+        distance = np.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
+        if distance >= min_distance:
+            print(distance, end=' ')
+            if x2 - x1 == 0:
+                slope = float('inf')
+            elif y2 - y1 == 0:
+                slope = float('-inf')
+            else:
+                slope = (y2 - y1) / (x2 - x1)
+                print(abs(slope), corner_points[i])
+                #if abs(slope) < min_slope:
+                #    break
+            slopes.append(slope)
+            slopes_point.append(corner_points[i])
 
-                slopes.append(slope)
-                slopes_point.append(corner_points[i])
+#240822        #for j in range(i+1, len(corner_points)):
+#240822        j = i+1
+#240822        if j < len(corner_points):
+#240822            y1, x1 = corner_points[i]
+#240822            y2, x2 = corner_points[j]
+#240822            distance = np.sqrt((x2-x1)**2+(y2-y1)**2)
+#240822            # print(distance,end=', ')
+#240822            #if distance < max_distance and distance >= min_distance:
+#240822            if distance >= min_distance:
+#240822                if x2 - x1 == 0:
+#240822                    slope = float('inf')
+#240822                elif y2 - y1 == 0:
+#240822                    slope = float('-inf')
+#240822                else:
+#240822                    slope = (y2-y1)/(x2-x1)
+#240822                    print(abs(slope), corner_points[i])
+#240822                    if abs(slope) < min_slope:
+#240822                        break
+#240822                    # print(corner_points[i], corner_points[j])
+#240822                    # cv.line(contour_img, (x1,y1), (x2,y2), (255, 0, 0), 1)
+#240822                    # draw Cross
+#240822                    #cv.line(contour_img, (x1-5, y1), (x1+5, y1), (255, 0, 0), 1)
+#240822                    #cv.line(contour_img, (x1, y1-5), (x1, y1+5), (255, 0, 0), 1)
+#240822                    #cv.imshow("drawC2", contour_img)
+#240822
+#240822                slopes.append(slope)
+#240822                slopes_point.append(corner_points[i])
         #cv.circle(contour_img, (x1,y1), 5, [0, 255, 0], 1)
     print()
     #處理剔除相同的點
+    i = 0
     for i in range(len(slopes_point) - 1, 0, -1):
         if slopes_point[i][0] == slopes_point[i - 1][0] and slopes_point[i][1] == slopes_point[i - 1][1]:
             slopes_point = np.delete(slopes_point, i, 0)
             slopes = np.delete(slopes, i, 0)
-
+    # draw cross
+    for i in range(len(slopes_point)):
+        cv.line(contour_img, (slopes_point[i][1] - 5, slopes_point[i][0]), (slopes_point[i][1] + 5, slopes_point[i][0]), (255, 0, 0), 2)
+        cv.line(contour_img, (slopes_point[i][1], slopes_point[i][0] - 5), (slopes_point[i][1], slopes_point[i][0] + 5), (255, 0, 0), 2)
+        cv.imshow("drawC2", contour_img)
 
     slopes = [slope for slope in slopes if slope != float('inf') and slope != float('-inf')]
     slopes.sort()
@@ -497,7 +525,8 @@ while True:
     cv.imshow('mask', mask)
     frame_res = cv.bitwise_and(frame, frame, mask=mask)
 
-    img_bin, img_o7, img_o7_inv = process_img(frame_res, mask, frame.shape[1], frame.shape[0])
+    #240822 img_bin, img_o7, img_o7_inv = process_img(frame_res, mask, frame.shape[1], frame.shape[0])
+    img_bin, img_o7, img_o7_inv, center = process_img(frame_res, mask, frame.shape[1], frame.shape[0])
 
     #極座標處理
     polar_img = cv.linearPolar(img_o7_inv, (img_o7.shape[1]//2, img_o7.shape[0]//2), img_o7.shape[1]//2+10, cv.WARP_FILL_OUTLIERS)
@@ -512,7 +541,8 @@ while True:
     cv.imwrite('temp_o/'+color_t+ '_p/'+ img_file + '_o7_inv.png', img_o7_inv)
     img_res = process_blob(frame, frame_res, img_bin, img_o7_inv)
 #-----------------------------------------------------------------------
-    contour_img, corner_points, slopes_pt = edges_process(frame, img_o7_inv)
+    #240822 contour_img, corner_points, slopes_pt = edges_process(frame, img_o7_inv)
+    contour_img, corner_points, slopes_pt = edges_process(frame, img_o7_inv, center)
 #-----------------------------------------------------------------------
     white_pixels = cv.countNonZero(img_bin)
     print('pixels=', white_pixels)
