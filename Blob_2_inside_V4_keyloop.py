@@ -464,7 +464,7 @@ def process_blob(file, frame, binary1, o7_inv):
 #240822 def edges_process(image, gray):
 def edges_process(image, gray, center):
     max_distance = 40
-    min_distance = 420 #240822 5    #200816 3
+    min_distance = param[13] - 30 #240822 5    #200816 3
     min_slope = 0.4
 
     edges = cv.Canny(gray, 50, 150)
@@ -491,11 +491,13 @@ def edges_process(image, gray, center):
     corner_points = np.argwhere(corners > threshold)
     #處理剔除相近的點
     for i in range(len(corner_points) - 1, 0, -1):
-        if corner_points[i][0] == corner_points[i - 1][0]:
+        #240822 if corner_points[i][0] == corner_points[i - 1][0]:
+        if abs(corner_points[i][0] - corner_points[i - 1][0]) < 6 and abs(corner_points[i][1] - corner_points[i - 1][1]) < 6:
             corner_points = np.delete(corner_points, i, 0)
-    for i in range(len(corner_points) - 1, 0, -1):
-        if corner_points[i][1] == corner_points[i - 1][1]:
-            corner_points = np.delete(corner_points, i, 0)
+    #for i in range(len(corner_points) - 1, 0, -1):
+    #    #240822 if corner_points[i][1] == corner_points[i - 1][1]:
+    #    if abs(corner_points[i][0] - corner_points[i - 1][0]) < 6 and abs(corner_points[i][1] - corner_points[i - 1][1]) < 6:
+    #        corner_points = np.delete(corner_points, i, 0)
 
     #print(corner_points)
 
@@ -547,7 +549,8 @@ def edges_process(image, gray, center):
     #處理剔除相同的點
     i = 0
     for i in range(len(slopes_point) - 1, 0, -1):
-        if slopes_point[i][0] == slopes_point[i - 1][0] and slopes_point[i][1] == slopes_point[i - 1][1]:
+        #240822 if slopes_point[i][0] == slopes_point[i - 1][0] and slopes_point[i][1] == slopes_point[i - 1][1]:
+        if abs(slopes_point[i][0] - slopes_point[i - 1][0]) < 6 and abs(slopes_point[i][1] - slopes_point[i - 1][1]) < 6:
             slopes_point = np.delete(slopes_point, i, 0)
             slopes = np.delete(slopes, i, 0)
     # draw cross
@@ -577,9 +580,9 @@ def edges_process(image, gray, center):
 #img_path = 'F:\\project\\bottlecap\\SAMPLES OUTSIDE\\0326\\tr\\' #'F:\\project\\bottlecap\\Samples\\' + color_t + "\\"
 # img_files = os.listdir(img_path)
 #img_path = 'F:\\project\\bottlecap\\test1\\0529\\red\\'
-img_path = 'd:\\project\\bottlecap\\test1\\in\\blue\\2024-08-14\\1\\resultNG\\'
+img_path = 'd:\\project\\bottlecap\\test1\\in\\gold\\2024-08-14\\1\\resultNG\\'
 
-color_t = 'blue'
+color_t = 'gold'
 work_path = 'temp/'+color_t
 sens = 8
 

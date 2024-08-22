@@ -363,7 +363,7 @@ def process_blob(img,frame, binary, output7_inv):
 #240822 def edges_process(image, gray):
 def edges_process(image, gray, center):
     max_distance = 40
-    min_distance = 300  #240822 3
+    min_distance = param[13] - 25  #240822 3
     min_slope = 0.1
 
     edges = cv.Canny(gray, 50, 150)
@@ -389,11 +389,13 @@ def edges_process(image, gray, center):
     corner_points = np.argwhere(corners > threshold)
     #處理剔除相近的點
     for i in range(len(corner_points) - 1, 0, -1):
-        if corner_points[i][0] == corner_points[i - 1][0]:
+        #240822 if corner_points[i][0] == corner_points[i - 1][0]:
+        if abs(corner_points[i][0] - corner_points[i - 1][0]) < 3 and abs(corner_points[i][1] - corner_points[i - 1][1]) < 3:
             corner_points = np.delete(corner_points, i, 0)
-    for i in range(len(corner_points) - 1, 0, -1):
-        if corner_points[i][1] == corner_points[i - 1][1]:
-            corner_points = np.delete(corner_points, i, 0)
+    #for i in range(len(corner_points) - 1, 0, -1):
+    ##240822    if corner_points[i][1] == corner_points[i - 1][1]:
+    #    if abs(corner_points[i][0] - corner_points[i - 1][0]) < 3 and abs(corner_points[i][1] - corner_points[i - 1][1]) < 3:
+    #        corner_points = np.delete(corner_points, i, 0)
 
     #print(corner_points)
 
@@ -449,7 +451,8 @@ def edges_process(image, gray, center):
     #處理剔除相同的點
     i = 0
     for i in range(len(slopes_point) - 1, 0, -1):
-        if slopes_point[i][0] == slopes_point[i - 1][0] and slopes_point[i][1] == slopes_point[i - 1][1]:
+        #240822 if slopes_point[i][0] == slopes_point[i - 1][0] and slopes_point[i][1] == slopes_point[i - 1][1]:
+        if abs(slopes_point[i][0] - slopes_point[i - 1][0]) < 3 and abs(slopes_point[i][1] - slopes_point[i - 1][1]) < 3:
             slopes_point = np.delete(slopes_point, i, 0)
             slopes = np.delete(slopes, i, 0)
     # draw cross
