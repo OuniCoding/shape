@@ -39,6 +39,7 @@ def process_img(frame, mask, nW, nH):
     if color_t == 'black':
         ret, binary = cv.threshold(gray2, thres, 255, cv.THRESH_BINARY)# + cv.THRESH_OTSU)
 
+        binary = cv.bitwise_and(binary, mask)  # 240815
         contours, hierarchy = cv.findContours(binary, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)  # cv.RETR_EXTERNAL cv.RETR_TREE
         black = cv.imread('black1120.jpg')
         black = cv.resize(black, (nW, nH))
@@ -133,8 +134,10 @@ def process_img(frame, mask, nW, nH):
 
         #lower = np.array([0, 0, 55])  # 轉換成 NumPy 陣列，範圍稍微變小 ( 55->30, 70->40, 252->200 )
         #upper = np.array([36, 255, 98])  # 轉換成 NumPy 陣列，範圍稍微加大 ( 70->90, 80->100, 252->255 )
-        lower = np.array([0, 0, 60])  # 轉換成 NumPy 陣列，範圍稍微變小 ( 55->30, 70->40, 252->200 )
-        upper = np.array([132, 73, 100])  # 轉換成 NumPy 陣列，範圍稍微加大 ( 70->90, 80->100, 252->255 )
+        #lower = np.array([0, 0, 60])  # 轉換成 NumPy 陣列，範圍稍微變小 ( 55->30, 70->40, 252->200 )
+        #upper = np.array([132, 73, 100])  # 轉換成 NumPy 陣列，範圍稍微加大 ( 70->90, 80->100, 252->255 )
+        lower = np.array([hmin, smin, vmin])  # 轉換成 NumPy 陣列，範圍稍微變小 ( 55->30, 70->40, 252->200 )
+        upper = np.array([hmax, smax, vmax])  # 轉換成 NumPy 陣列，範圍稍微加大 ( 70->90, 80->100, 252->255 )
         output = cv.inRange(frame, lower, upper)   # 取得顏色範圍的顏色
         cv.imshow("O", output)
         kernel = cv.getStructuringElement(cv.MORPH_RECT, (blur, blur))  # 設定膨脹與侵蝕的參數
@@ -143,6 +146,7 @@ def process_img(frame, mask, nW, nH):
         output9 = cv.bitwise_and(gray2, gray, mask=output)
         #cv.imshow("O9", output9)
         #ret, output9 = cv.threshold(output9, 7, 255, cv.THRESH_BINARY_INV)
+        #ret, output9 = cv.threshold(output9, thres, 255, cv.THRESH_BINARY)
         ret, output9 = cv.threshold(output9, 50, 255, cv.THRESH_BINARY)
         cv.imshow("O9", output9)
 
@@ -164,7 +168,7 @@ def process_img(frame, mask, nW, nH):
     else:
         ret, binary = cv.threshold(gray2, thres, 255, cv.THRESH_BINARY)  # + cv.THRESH_OTSU)
 
-
+    binary = cv.bitwise_and(binary, mask) #240815
     contours, hierarchy = cv.findContours(binary, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE) #cv.RETR_EXTERNAL cv.RETR_TREE
     black = cv.imread('black1120.jpg')
     black = cv.resize(black, (nW, nH))
@@ -529,9 +533,9 @@ def edges_process(image, gray):
 #img_path = 'F:\\project\\bottlecap\\SAMPLES OUTSIDE\\0326\\tr\\' #'F:\\project\\bottlecap\\Samples\\' + color_t + "\\"
 # img_files = os.listdir(img_path)
 #img_path = 'F:\\project\\bottlecap\\test1\\0529\\red\\'
-img_path = 'f:\\project\\bottlecap\\test1\\in\\all\\' #black\\2024-06-05\\1\\resultG\\'
+img_path = 'f:\\project\\bottlecap\\test1\\in\\gold\\2024-08-14\\1\\resultG\\'
 
-color_t = 'black'
+color_t = 'gold'
 work_path = 'temp/'+color_t
 sens = 8
 
@@ -602,8 +606,8 @@ while True:
     # cv.imwrite('temp/'+color_t+ '_p/'+ img_file + '_o7_inv.png', img_o7_inv)
     img_res = process_blob(img_file, frame_res, img_bin, img_o7_inv)
 #-----------------------------------------------------------------------
-    if color_t != 'black  ':
-        contour_img, corner_points, slopes_pt = edges_process(frame, img_o7_inv)
+    # if color_t != 'black  ':
+    contour_img, corner_points, slopes_pt = edges_process(frame, img_o7_inv)
         #cv.putText(contour_img, str(len(corner_points)) + ' ' + str(len(slopes_pt)), (5, 20), cv.FONT_HERSHEY_PLAIN, 1.2,
         #           (0, 255, 0), 1)
         #

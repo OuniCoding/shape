@@ -551,9 +551,9 @@ def edges_process(image, gray):
 #img_path = 'F:\\project\\bottlecap\\SAMPLES OUTSIDE\\0326\\tr\\' #'F:\\project\\bottlecap\\Samples\\' + color_t + "\\"
 # img_files = os.listdir(img_path)
 #img_path = 'F:\\project\\bottlecap\\test1\\0529\\red\\'
-img_path = 'd:\\project\\bottlecap\\test1\\in\\gold\\2024-08-14\\1\\resultG\\'
+img_path = 'f:\\project\\bottlecap\\test1\\in\\black\\2024-08-30\\1\\resultG\\'
 
-color_t = 'gold'
+color_t = 'black'
 work_path = 'temp/'+color_t
 sens = 8
 

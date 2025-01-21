@@ -38,8 +38,10 @@ def process_img(frame, nW, nH):
         ret, binary = cv.threshold(gray2, thres, 255, cv.THRESH_BINARY)# + cv.THRESH_OTSU)
         #lower = np.array([6, 6, 6])  # 轉換成 NumPy 陣列，範圍稍微變小 ( 55->30, 70->40, 252->200 )
         #upper = np.array([27, 27, 25])  # 轉換成 NumPy 陣列，範圍稍微加大 ( 70->90, 80->100, 252->255 )
-        lower = np.array([0, 0, 55])  # 轉換成 NumPy 陣列，範圍稍微變小 ( 55->30, 70->40, 252->200 )
-        upper = np.array([36, 255, 98])  # 轉換成 NumPy 陣列，範圍稍微加大 ( 70->90, 80->100, 252->255 )
+        # lower = np.array([0, 0, 55])  # 轉換成 NumPy 陣列，範圍稍微變小 ( 55->30, 70->40, 252->200 )
+        # upper = np.array([36, 255, 98])  # 轉換成 NumPy 陣列，範圍稍微加大 ( 70->90, 80->100, 252->255 )
+        lower = np.array([hmin, smin, vmin])  # 轉換成 NumPy 陣列，範圍稍微變小 ( 55->30, 70->40, 252->200 )
+        upper = np.array([hmax, smax, vmax])  # 轉換成 NumPy 陣列，範圍稍微加大 ( 70->90, 80->100, 252->255 )
         output = cv.inRange(frame, lower, upper)   # 取得顏色範圍的顏色
         kernel = cv.getStructuringElement(cv.MORPH_RECT, (blur, blur))  # 設定膨脹與侵蝕的參數
         output = cv.dilate(output, kernel)       # 膨脹影像，消除雜訊
@@ -177,11 +179,9 @@ def process_img(frame, nW, nH):
             cx1 = cx
         #if radius > dis: radius = dis
 
-        #cv.circle(black, (cx, cy), radius, (255, 255, 255), -1)
-        cv.circle(black, (int((cx1 + cx) / 2), cy), radius, (255, 255, 255), -1)
-        # cv.circle(black, (cx, cy), dis, (255, 255, 255), -1)
-        # cv.circle(black, center, dis, (0, 255, 0), 2)
-        # cv.circle(black, (cx1, cy1), radius, (255, 255, 255), -1)
+        cv.circle(black, (cx, cy), radius, (255, 255, 255), -1)
+        # cv.circle(black, (int((cx1 + cx) / 2), cy), radius, (255, 255, 255), -1)
+
         cv.circle(black, (cx, cy), 5, (0, 255, 0), -1)
         cv.circle(black, (cx1, cy1), 2, (0, 0, 255), -1)
         # debug
@@ -264,7 +264,8 @@ def process_img(frame, nW, nH):
     print('r=',r)
     #cv.circle(diff, (cx, cy), r-10, (0, 0, 0), 10)
     #cv.circle(diff, (int((cx1 + cx) / 2), cy), radius, (0, 0, 0), 1)
-    cv.circle(diff, (cx, cy), r, (0, 0, 0), 2)
+    # cv.circle(diff, (cx, cy), r, (0, 0, 0), 2)
+    cv.circle(diff, (int((cx1 + cx) / 2), cy), r - 10, (0, 0, 0), 10)
     ret, diff = cv.threshold(diff, 127, 255, cv.THRESH_BINARY_INV)
     cv.imshow("diff1", diff)
 
@@ -275,7 +276,7 @@ def process_img(frame, nW, nH):
     return diff, output7, binary
 
 def process_blob(img,frame, binary, output7_inv):
-    edges_process(frame, output7_inv)
+    #edges_process(frame, output7_inv)
 
     params = cv.SimpleBlobDetector_Params()
 
@@ -369,7 +370,7 @@ def edges_process(image, gray):
 
     corners = cv.cornerHarris(gray, 4, 5, 0.04)
 
-    threshold = 0.5*corners.max()
+    threshold = 0.9*corners.max()
     corners = cv.dilate(corners, None)
     #image[corners > threshold] = [0, 255, 0]
     contour_img[corners > threshold] = [0, 0, 255]
@@ -385,6 +386,7 @@ def edges_process(image, gray):
     #print(corner_points)
 
     slopes=[]
+    slopes_point = []
     for i in range(len(corner_points)):
         for j in range(i+1, len(corner_points)):
             y1, x1 = corner_points[i]
@@ -402,6 +404,7 @@ def edges_process(image, gray):
                     #cv.line(contour_img, (x1,y1), (x2,y2), (0, 0, 255), 1)
 
                 slopes.append(slope)
+                slopes_point.append(corner_points[i])
         #cv.circle(contour_img, (x1,y1), 5, [0, 255, 0], 1)
 
     slopes = [slope for slope in slopes if slope != float('inf') and slope != float('-inf')]
@@ -416,15 +419,17 @@ def edges_process(image, gray):
     print('Corners=', len(corner_points), 'Slope cnt=', len(slopes))
     print('max slope=', max_slope)
     print('min slope=', min_slope)
-    cv.putText(contour_img, str(len(corner_points))+' '+str(len(slopes)), (5, 20), cv.FONT_HERSHEY_PLAIN, 1.2, (0, 255, 0), 1)
-    cv.imshow('Contours_IMAGE', contour_img)
+    #cv.putText(contour_img, str(len(corner_points))+' '+str(len(slopes)), (5, 20), cv.FONT_HERSHEY_PLAIN, 1.2, (0, 255, 0), 1)
+    #cv.imshow('Contours_IMAGE', contour_img)
+
+    return contour_img, corner_points, slopes_point
 
 
 # img_path = 'F:\\project\\bottlecap\\SAMPLES OUTSIDE\\0326\\pink\\' #'F:\\project\\bottlecap\\Samples\\' + color_t + "\\"
-img_path = 'D:\\project\\bottlecap\\test1\\out\\0717\\'#in\\2024-07-22\\2\\resultNG\\' # 'D:\\project\\bottlecap\\test1\\out\\0717\\'
+img_path = 'f:\\project\\bottlecap\\test1\\in\\2024-07-22\\2\\resultNG\\' # 'D:\\project\\bottlecap\\test1\\out\\0717\\'
 # img_files = os.listdir(img_path)
 
-color_t = 'black'
+color_t = 'white'
 work_path = 'temp_o/'+color_t
 sens = 8
 
@@ -483,15 +488,29 @@ while True:
     cv.imwrite('temp_o/' + color_t + '_p/' + img_file + '_o7.png', img_o7)
     cv.imwrite('temp_o/'+color_t+ '_p/'+ img_file + '_o7_inv.png', img_o7_inv)
     img_res = process_blob(frame, frame_res, img_bin, img_o7_inv)
+#-----------------------------------------------------------------------
+    contour_img, corner_points, slopes_pt = edges_process(frame, img_o7_inv)
+#-----------------------------------------------------------------------
     white_pixels = cv.countNonZero(img_bin)
     print('pixels=', white_pixels)
 
     if len(img_res) > 0:
+        cv.putText(img_res, str(len(corner_points)) + ' ' + str(len(slopes_pt)), (5, 40), cv.FONT_HERSHEY_PLAIN, 1.2,
+                   (0, 255, 0), 1)
+        for i in range(len(slopes_pt)):
+            cv.circle(img_res, (slopes_pt[i][1], slopes_pt[i][0]), 10, [0, 0, 255], 1)
+        cv.imshow('result_all', img_res)
         cv.imwrite('temp_o/'+color_t+'/result_' + img_file + '.png', img_res)
     else:
         white_pixels = cv.countNonZero(img_bin)
         print(white_pixels)
         if white_pixels < min_pixels:#600000: #800000:
+            cv.putText(frame_res, str(len(corner_points)) + ' ' + str(len(slopes_pt)), (5, 40), cv.FONT_HERSHEY_PLAIN,
+                       1.2,
+                       (0, 255, 0), 1)
+            for i in range(len(slopes_pt)):
+                cv.circle(frame_res, (slopes_pt[i][1], slopes_pt[i][0]), 10, [0, 0, 255], 1)
+            cv.imshow('result_all', frame_res)
             cv.imshow("all_zero", frame_res)
             cv.imwrite('temp_o/'+ color_t +'/result_' + img_file, frame_res)
     now_time = time.time()

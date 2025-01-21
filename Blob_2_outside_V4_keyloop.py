@@ -8,6 +8,7 @@ import os
 import time
 import xml.etree.ElementTree as ET
 
+diameter_v = 29
 def set_blob_param(category,para_name):
     param_file = ET.parse(para_name)
     root = param_file.getroot()
@@ -15,12 +16,45 @@ def set_blob_param(category,para_name):
     param = []
     while root[0][id].tag != category:
         id += 1
-    for i in range(0,15):
-        param.append(int(root[0][id][i].attrib['value']))
+
+    for i in range(0, 20):
+        if i < 17:
+            param.append(int(root[0][id][i].attrib['value']))
+        else:
+            param.append(float(root[0][id][i].attrib['value']))
+    param.append(int(root[0][id][20].attrib['value']))
+
+    unit_p = diameter_v / 2 / param[13]
+    if category != 'trans':
+        param[2] = int(0.3 * 0.3 / (unit_p) ** 2) # min_Area
 
     return param
 
+def read_path_color():
+    param_file = 'param_out.ini'
+
+    ini_file = open(param_file, 'r')
+    color = ini_file.readline()
+    color = color.replace('\n','')
+    path = ini_file.readline()
+    path = path.replace('\n','')
+
+    ini_file.close()
+
+    return color, path
+
 def process_img(frame, mask, nW, nH):
+    diameter_v = 29
+    if param[16] == 1:
+        err_max = param[17]
+        err_min = param[18]
+        er_pixel = int((err_max+err_min)/ 2 / 2 / (diameter_v / 2 / param[13]))
+    else:
+        err_max = 1.5
+        err_min = 1.5
+        er_pixel = int(1.5/2/(diameter_v/2/param[13]))
+    err_rad = int(param[19])
+
     cv.imshow("input", frame)
     gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
     #gray = cv.bitwise_not(gray)
@@ -34,7 +68,7 @@ def process_img(frame, mask, nW, nH):
     cv.imshow("gray2", gray2)
 
     # if color_t == 'black' or color_t == 'trans' or color_t == 'gold' or color_t == 'blue' or color_t == 'green' or color_t == 'red':
-    if color_t == 'gold':
+    if color_t == 'gold':# or color_t == 'trans':
         ret, binary = cv.threshold(gray2, thres, 255, cv.THRESH_BINARY)# + cv.THRESH_OTSU)
         binary = cv.bitwise_and(binary, mask) #240820
 
@@ -73,9 +107,11 @@ def process_img(frame, mask, nW, nH):
 
     else:
         ret, binary = cv.threshold(gray2, thres, 255, cv.THRESH_BINARY)  # + cv.THRESH_OTSU)
+        cv.imshow("BI", binary)
         binary = cv.bitwise_and(binary, mask)  # 240820
 
-    contours, hierarchy = cv.findContours(binary, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
+    #contours, hierarchy = cv.findContours(binary, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
+    contours, hierarchy = cv.findContours(binary, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
     black = cv.imread('black1024.jpg')
     black = cv.resize(black, (nW, nH))
     amount = 0
@@ -104,18 +140,42 @@ def process_img(frame, mask, nW, nH):
     cy = int(nW/2)  #512
     cx1 = cx    #512
     cy1 = cy    #512
+    if param[16] == 1:
+        r_min = r - int(err_min / 2 / (diameter_v / 2 / param[13])) * (11 - defor) / 4
+        r_max = r + int(err_max / 2 / (diameter_v / 2 / param[13])) * (11 - defor) / 4
+    else:
+        r_min = r - er_pixel * (11 - defor) / 4
+        r_max = r + er_pixel * (11 - defor) / 4
+    print(r_min, r_max)
 
+    # 擬合圓形
+    if len(contours):
+        contour = max(contours, key=cv.contourArea)
+        (x, y), radius = cv.minEnclosingCircle(contour)
+    else:
+        radius = param[13]
+        x = int(nW / 2)  # 512
+        y = int(nW / 2)  # 512
+
+    center = (int(x), int(y))
+    radius = int(radius)
+
+    if radius > r:
+        r = radius
+    cv.circle(black, center, radius, (255, 255, 255), -1)
+
+    ''' 241210 ------ off ------
     for cnt in range(len(contours)):
         (x, y), radius = cv.minEnclosingCircle(contours[cnt])
         center = (int(x), int(y))
         radius = int(radius)
-        if radius < (r-6):  #450:
+        if radius < r_min:  #(r-er_pixel * (10-defor)/4):  #450:
             continue
         # debug
-        print('radius=',radius)
+        print('radius=', radius)
         # debug
-        if radius > (r+6):
-            radius = param[13]
+        if radius > r_max:  #(r+er_pixel* (10-defor)/4):   #60
+            continue    # radius = param[13]
         if radius > r:
             r = radius
         # debug
@@ -183,10 +243,12 @@ def process_img(frame, mask, nW, nH):
         #if radius > dis: radius = dis
 
         cv.circle(black, (cx, cy), radius, (255, 255, 255), -1)
+    ---- off -----'''
         # cv.circle(black, (int((cx1 + cx) / 2), cy), radius, (255, 255, 255), -1)
-
-        cv.circle(black, (cx, cy), 5, (0, 255, 0), -1)
-        cv.circle(black, (cx1, cy1), 2, (0, 0, 255), -1)
+        #中心標註
+        #cv.circle(black, (cx, cy), 5, (0, 255, 0), -1)
+        #cv.circle(black, (cx1, cy1), 2, (0, 0, 255), -1)
+        # 中心標註
         # debug
         # cv.circle(black, (cx1, cy1), dis, (0, 0, 255), 1)
         # cv.imshow('line', black)
@@ -237,7 +299,8 @@ def process_img(frame, mask, nW, nH):
     black_b = cv.cvtColor(black, cv.COLOR_BGR2GRAY)
     ret, black_b = cv.threshold(black_b, 1, 255, cv.THRESH_BINARY)
     cv.imshow("b", black_b)
-    binary = cv.bitwise_and(binary, black_b)
+    if color_t != 'black':
+        binary = cv.bitwise_and(binary, black_b)
 
     cv.imshow("BIN", binary)
     output5 = cv.adaptiveThreshold(gray2, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY, blockSize, C_V)
@@ -263,14 +326,31 @@ def process_img(frame, mask, nW, nH):
     ret, black_a = cv.threshold(black_a, 1, 255, cv.THRESH_BINARY)
     diff = cv.absdiff(black_a, binary)
     ret, diff = cv.threshold(diff, 127, 255, cv.THRESH_BINARY_INV)
+    #dd=diff.copy()
+    #cv.circle(dd, (int((cx1 + cx) / 2), cy), r, (0, 0, 0), 1)
     cv.imshow("diff", diff)
+    #cv.imshow("dd", dd)
     print('r=',r)
     #cv.circle(diff, (cx, cy), r-10, (0, 0, 0), 10)
     #cv.circle(diff, (int((cx1 + cx) / 2), cy), radius, (0, 0, 0), 1)
     # cv.circle(diff, (cx, cy), r, (0, 0, 0), 2)
-    cv.circle(diff, (int((cx1 + cx) / 2), cy), r - 10, (0, 0, 0), param[14])
+
+    '''off 變形檢測
+    if color_t != 'black':
+        cv.circle(diff, (int((cx1 + cx) / 2), cy), r - er_pixel, (0, 220, 0), int(er_pixel * (11-defor) / 5)) #param[14]
+    #cv.circle(diff, (int((cx1 + cx) / 2), cy), r, (0, 0, 0), int(er_pixel * (11-defor) / 5)) #param[14]
+    '''
+    print('er_pixel=', er_pixel)
+    # cv.circle(diff, (int((cx1 + cx) / 2), cy), r - 7, (0, 0, 0), int(param[14] * (11-defor) / 5)) #param[14]
     # cv.circle(diff, (int((cx1 + cx) / 2), cy), r - 7, (0, 0, 0), 5)
+    #diff = cv.bitwise_or(diff, dd)
     ret, diff = cv.threshold(diff, 127, 255, cv.THRESH_BINARY_INV)
+    cv.imshow("diff0", diff)
+    diff = cv.bitwise_and(diff, binary)  # 241202
+    '''off 變形檢測
+    if color_t != 'black':
+        cv.circle(diff, (int((cx1 + cx) / 2), cy), (r - err_rad), (255, 255, 255), (11-defor))
+    '''
     cv.imshow("diff1", diff)
 
     # debug
@@ -278,15 +358,205 @@ def process_img(frame, mask, nW, nH):
     # debug
     #1 return binary, output7, output7_inv
     #240822 return diff, output7, binary
-    return diff, output7, binary, (int((cx1 + cx) / 2), cy)
+    # 241210 add "contours, center, radius"
+    return diff, output7, binary, (int((cx1 + cx) / 2), cy), contours, center, radius
 
-def process_blob(img,frame, binary, output7_inv):
+def process_blob(img,frame, binary, output7_inv, contours, center, radius):
     #edges_process(frame, output7_inv)
+    err_max = param[17]
+    err_min = param[18]
+    er_pixel = int((err_max + err_min) / 2 / 2 / (diameter_v / 2 / param[13]))
 
+    unit_p = 0.3 / (diameter_v / 2 / param[13])
+    minSize_dia = minSize ** 0.5
+    maxArea_dia = max_Area ** 0.5
+#'''-----
+    kp_findContour = []
+    if color_t != 'black':
+        # 確保只有一個主要輪廓，找到最大的輪廓
+        if len(contours) == 0:
+            result = []
+            return result
+# -----------------邊緣瑕疵檢測: 不規則圓弧與圓弧的缺口檢測
+        ## 邊緣檢測
+        #edges = cv.Canny(binary, 128, 255, apertureSize=5, L2gradient=True) #  apertureSize=3, L2gradient=False
+        #
+        ## 找到輪廓
+        #contours, _ = cv.findContours(edges, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
+        ## 找到最大的輪廓（假設為圓弧）
+        #contour = max(contours, key=cv.contourArea)
+        ##不規則圓弧缺口
+        ## 使用 cv2.fitEllipse 擬合橢圓
+        #if len(contour) >= 2:  # fitEllipse 要求輪廓點數 >= 5
+        #    ellipse = cv.fitEllipse(contour)
+        #    centerM, axes, angle = ellipse[0], ellipse[1], ellipse[2]
+        #    result = cv.cvtColor(binary, cv.COLOR_GRAY2BGR)
+        #    cv.ellipse(result, ellipse, (0, 255, 0), 2)  # 畫出擬合的橢圓
+        #
+        #    # 檢測缺口：計算每個點到橢圓的距離
+        #    defects = []
+        #    for point in contour:
+        #        px, py = point[0]
+        #        rx = (px - centerM[0]) * np.cos(np.radians(angle)) + (py - centerM[1]) * np.sin(np.radians(angle))
+        #        ry = (py - centerM[1]) * np.cos(np.radians(angle)) - (px - centerM[0]) * np.sin(np.radians(angle))
+        #        distance = (rx / (axes[0] / 2)) ** 2 + (ry / (axes[1] / 2)) ** 2
+        #        if distance > 1.1 or distance < 0.9:  # 超出橢圓範圍
+        #            defects.append((px, py))
+        #
+        #    # 標記缺口
+        #    for defect in defects:
+        #        cv.circle(result, defect, 5, (0, 0, 255), -1)  # 紅色標記缺口
+        #
+        #    # 顯示結果
+        #    cv.imshow("Defects", result)
+        #
+        #
+        ##圓弧缺口
+        ## 擬合圓
+        #(xM, yM), radiusM = cv.minEnclosingCircle(contour)
+        #centerM = (int(xM), int(yM))
+        #radiusM = int(radiusM)
+        ## 初始化缺口點數組
+        #defects = []
+        ## 計算每個點到擬合圓的距離
+        #for point in contour:
+        #    px, py = point[0]
+        #    distance = np.sqrt((px - xM) ** 2 + (py - yM) ** 2)
+        #
+        #    # 如果距離小於一定值，判定為缺口
+        #    if abs(distance - radiusM) > 7:  # 10 為閾值，可根據需求調整
+        #        defects.append((px, py))
+        #
+        ## 繪製結果
+        #result = cv.cvtColor(binary, cv.COLOR_GRAY2BGR)
+        #cv.circle(result, centerM, radiusM, (0, 255, 0), 2)  # 繪製擬合圓
+        #
+        ## 標記缺口
+        #for defect in defects:
+        #    cv.circle(result, defect, 5, (0, 0, 255), -1)  # 紅色標記缺口
+        #cv.imshow("Defects1", result)
+
+
+    #edges = cv.Canny(binary, 128, 255, apertureSize=5, L2gradient=True)  # apertureSize=3, L2gradient=False
+
+        # 找到輪廓
+        #contours, _ = cv.findContours(edges, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
+        # 找到最大的輪廓（假設為圓弧）
+        contour = max(contours, key=cv.contourArea)
+        # 不規則圓弧缺口
+        # 使用 cv2.fitEllipse 擬合橢圓
+        if len(contour) >= 3:  # fitEllipse 要求輪廓點數 >= 5
+            ellipse = cv.fitEllipse(contour)
+            centerM, axes, angle = ellipse[0], ellipse[1], ellipse[2]
+            cv.ellipse(binary, ellipse, (255, 255, 255), param[20])  # 畫出擬合的橢圓
+            cv.imshow("fitEllipse", binary)
+
+        x, y = center
+        print((x, y), radius)
+#
+#        result = cv.cvtColor(binary, cv.COLOR_GRAY2BGR)
+#        cv.circle(result, center, radius, (0, 255, 0), 1)
+#        cv.imshow("R", result)
+#
+#        # 繪製擬合圓形
+#        cv.circle(binary, center, radius, (255, 255, 255), 1)
+#        cv.imshow("Binary", binary)
+#
+#        # 檢測是否有缺陷（偏離圓形的部分）
+#        for point in contour:
+#            dist = cv.pointPolygonTest(contour, (x, y), True)
+#            if abs(dist) >= (radius - er_pixel):  # 偏差超過5個像素，標記為缺陷
+#                # cv.circle(binary, tuple(point[0]), int(abs(dist-radius)), (255, 255, 255), -1)
+#                cv.circle(binary, tuple(point[0]), 1, (255, 255, 255), -1)
+#                cv.circle(frame, tuple(point[0]), 1, (0, 0, 255), -1)
+#        cv.imshow("Binary1", binary)
+#
+#        area = cv.contourArea(contour)
+#        perimeter = cv.arcLength(contour, True)
+#
+#        # 圓形度公式：4 * π * (面積) / (周長)^2
+#        circularity = 4 * np.pi * (area / (perimeter ** 2))
+#        # 判斷是否接近圓形
+#        if 0.5 < circularity < 1.3:  # 可調整範圍
+#            cv.drawContours(binary, contour, -1, (255, 255, 255), 1)
+#        cv.circle(binary, center, radius - 3, (255, 255, 255), int(param[19]+1))
+#        cv.imshow("Binary2", binary)
+#
+#        # ''' off find contour --------
+        contours, hierarchy = cv.findContours(binary, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
+        # output = cv.cvtColor(binary, cv.COLOR_GRAY2BGR)
+
+        all_point = []
+        all_area = 0
+        keypoints = []
+
+        result = []
+        cx_p = 0
+        cy_p = 0
+        for cnt in range(len(contours)):
+            # 求解面積
+            area = cv.contourArea(contours[cnt])
+            perimeter = cv.arcLength(contours[cnt], True)
+            # print(cnt, ':', area)
+            # if area >= 40 and area <= max_Area:  # trans:7000
+            if area >= minSize and area <= max_Area:  # trans:7000
+                # 求解中心位置
+                mm = cv.moments(contours[cnt])
+                cx = int(mm['m10'] / mm['m00'])
+                cy = int(mm['m01'] / mm['m00'])
+                if abs(cx - cx_p) < 5 and abs(cy - cy_p) < 5:
+                    continue
+
+                length = np.sqrt((cx - x) ** 2 + (cy - y) ** 2)
+                print(f'{cnt}, area={area}, Length={length}, Perimeter = {perimeter}, ', end='')
+                print(f", (座標): ({cx}, {cy})")
+                if length <= radius:
+                    keypoints.append(contours[cnt])
+                else:
+                    cv.drawContours(frame, contours, cnt, (0, 255, 0), 1)
+
+                cx_p = cx
+                cy_p = cy
+            elif area < minSize and area > 10:
+                # 求解中心位置
+                mm = cv.moments(contours[cnt])
+                cx = int(mm['m10'] / mm['m00'])
+                cy = int(mm['m01'] / mm['m00'])
+
+                print(f'Small {cnt}, area={area},(座標): ({cx}, {cy}) ')
+
+                length = np.sqrt((cx - x) ** 2 + (cy - y) ** 2)
+                if length <= radius:
+                    if abs(cx - x) <= 20 and abs(cy - y) <= 20:
+                        keypoints.append(contours[cnt])
+                    all_point.append((cx, cy))
+                    all_area = area + all_area
+                cv.drawContours(frame, contours, cnt, (0, 255, 128), 1)
+                # cv.drawContours(binary, contours, cnt, (255, 255, 255), -1)
+            else:
+                cv.drawContours(frame, contours, cnt, (255, 0, 0), 1)
+                # cv.drawContours(binary, contours, cnt, (255, 255, 255), -1)
+
+        for cnt in range(len(keypoints)):
+            cv.drawContours(frame, keypoints, cnt, (0, 0, 255), 1)
+
+        cv.imshow("contours", frame)
+
+        kp_findContour = keypoints
+        # binary = cv.cvtColor(output, cv.COLOR_BGR2GRAY)
+        # cv.imshow("BinOut", binary)
+        print(f'\nKeyPoints={len(keypoints)}, all small area={all_area}, all small points={len(all_point)}')
+        #result = cv.putText(frame, str(len(keypoints)), (100, 20), cv.FONT_HERSHEY_PLAIN, 1.2, (0, 255, 255), 1)
+        result = cv.putText(frame, f'{len(keypoints)}  {len(all_point)} X small area={all_area}', (5, 20), cv.FONT_HERSHEY_PLAIN, 1.2,
+                            (0, 255, 255), 1)
+        cv.imshow("blob_result", result)
+        # ------- off find contour '''
+        return result
+##------
     params = cv.SimpleBlobDetector_Params()
 
     # change thresholds
-    params.minThreshold = 0
+    params.minThreshold = 0     #0
     params.maxThreshold = 200   #120
 
     # 重复的最小次数，只有属于灰度图像斑点的那些二值图像斑点数量大于该值时，该灰度图像斑点才被认为是特征点
@@ -295,69 +565,127 @@ def process_blob(img,frame, binary, output7_inv):
     params.minDistBetweenBlobs = 10
 
     # filter by color
-    params.filterByColor = False    #True
+    params.filterByColor = False    #True     #
     params.blobColor = 0
 
     # filter by area
     params.filterByArea = True
-    params.minArea = minSize    #50 #85
+    params.minArea = 10  # minSize    #50 #85
     params.maxArea = max_Area   #2000   trans:7000
 
-    # filter by circularity
+    # filter by circularity 圓形度公式：4 * π * (面積) / (周長)^2
     params.filterByCircularity = False  #True
     params.minCircularity = 0.01
     params.maxCircularity = 150
 
     # Filter by Convexity
-    params.filterByConvexity = False  #True
-    params.minConvexity = 0.1
+    params.filterByConvexity = True   #False  #True
+    params.minConvexity = 0.1   #0.87
+    params.maxConvexity = 10.0
 
     # Filter by Inertia
-    params.filterByInertia = False  #True
-    params.minInertiaRatio = 0.1    #0.5
+    params.filterByInertia = True   #False  #True
+    params.minInertiaRatio = 0.01    #0.5
+    params.maxInertiaRatio = 10.0
 
     # contours, hierarchy = cv.findContours(binary, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
     # contours, hierarchy = cv.findContours(output9, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
-    contours, hierarchy = cv.findContours(binary, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
-    for cnt in range(len(contours)):
-        area = cv.contourArea(contours[cnt])
-        print(cnt, ':', area)
-        if area >= minSize and area <= max_Area:     # trans:7000
-            # 提取與繪制輪廓
-            cv.drawContours(frame, contours, cnt, (0, 0, 0), -1)
-            print(cnt,':', area)
-        else:
-            cv.drawContours(frame, contours, cnt, (255, 0, 255), 1)
-        cv.imshow("contours", frame)
+    #''' off find contour --------
+    ''' 241210 off findContours, receive "contours, center, radius" from process_img
+    contours, hierarchy = cv.findContours(binary, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
+    # 確保只有一個主要輪廓，找到最大的輪廓
+    if len(contours) == 0:
+        result = []
+        return result
+    contour = max(contours, key=cv.contourArea)
 
+    # 擬合圓形
+    (x, y), radius = cv.minEnclosingCircle(contour)
+    center = (int(x), int(y))
+    radius = int(radius)
+    off findContours, receive "contours, center, radius" from process_img ----- '''
+    #'''-------- off Blob Detector ----------
     # 提取关键点
     keypoints = []
     detector = cv.SimpleBlobDetector_create(params)
     if color_t != 'black':
         keypoints = detector.detect(binary) #(output7_inv)    #  gray
-    else:
-        keypoints = detector.detect(binary) #(output7_inv)  # (binary) #  gray
-    print(len(keypoints))
+    #black else:
+    #black     keypoints = detector.detect(binary) #(output7_inv)  # (binary) #  gray
+    print('keypoints=', len(keypoints))
     result = []
     blank = np.zeros((1, 1))
+    #if len(keypoints) > 100:
+    #    kp = keypoints[0:100]
+    #else:
+    #    kp = keypoints
+    kp = []
+    small_points = 0
+    all_point = []
+    all_area = 0
     if len(keypoints) > 0:
-        result = cv.drawKeypoints(
-            frame, keypoints, blank, (0, 0, 255), cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS
-        )
-        result_i = cv.drawKeypoints(
-            img, keypoints, blank, (0, 0, 255), cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS
-        )
+        # result = frame.copy()
+        result = cv.drawKeypoints(frame, keypoints, blank, (0, 0, 255), cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+        #result = cv.drawKeypoints(frame, kp, blank, (0, 255, 255), cv.DRAW_MATCHES_FLAGS_DEFAULT)
+        #result = cv.drawKeypoints(frame, kp, blank, (0, 255, 255), cv.DRAW_MATCHES_FLAGS_DRAW_OVER_OUTIMG)
+        #result = cv.drawKeypoints(frame, kp, blank, (0, 255, 255), cv.DRAW_MATCHES_FLAGS_NOT_DRAW_SINGLE_POINTS)
+        result_i = cv.drawKeypoints(img, keypoints, blank, (0, 0, 255), cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
 
-#        for marker in keypoints:
-#            cv.circle(frame, (int(marker.pt[0]), int(marker.pt[1])), 3, (255, 0, 255), -1, 8)
-#            # cv.circle(frame, (int(marker.pt[0]), int(marker.pt[1])), int(marker.size/2), (0, 0, 255), 2, 1)
-#            print('size:', marker.size)
+    # if len(keypoints) > 0:
+    #     result = cv.drawKeypoints(
+    #         frame, keypoints, blank, (0, 0, 255), cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS
+    #     )
+    #     result_i = cv.drawKeypoints(
+    #         img, keypoints, blank, (0, 0, 255), cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS
+    #     )
+
+        for marker in keypoints:   # keypoints:
+            px = int(marker.pt[0])
+            py = int(marker.pt[1])
+            psize = marker.size
+            if psize >= minSize_dia:
+                if psize <= maxArea_dia:
+                    # same_flag = False
+                    # for i in range(len(kp_findContour)):
+                    #     ix, iy = kp_findContour[i]
+                    #     if px == ix and py == iy:
+
+                    #        kp.append(marker)
+                    #        # result = cv.circle(frame, (px, py), int(psize/2), (0, 0, 255), 1)
+                    #        cv.putText(result, str('%.2f'%psize), (px + 10, py), cv.FONT_HERSHEY_PLAIN, 1.2, (0, 255, 0), 1)
+                    #        print(f'Diameter:{marker.size}, (座標): ({px}, {py})')
+                    #        same_flag = True
+                    #        break
+                    kp.append(marker)
+                    cv.putText(result, str('%.2f' % psize), (px + 10, py), cv.FONT_HERSHEY_PLAIN, 1.2, (0, 255, 0), 1)
+                    print(f'Diameter:{marker.size}, (座標): ({px}, {py})')
+                    # if not same_flag:
+                    #     cv.putText(result, str('%.2f' % psize), (px + 10, py), cv.FONT_HERSHEY_PLAIN, 1, (0, 100, 255),
+                    #                1)
+                    #     print(f'xxxDiameter:{marker.size}, (座標): ({px}, {py})')
+
+                else:
+                    cv.putText(result, str('%.2f' % psize), (px + 10, py), cv.FONT_HERSHEY_PLAIN, 1, (100, 255, 120), 1)
+                    print(f'<= Diameter:{marker.size}, (座標): ({px}, {py})')
+            else:   # < minSize
+            #elif psize < unit_p:
+                small_points += 1
+                all_point.append((px, py))
+                all_area = np.pi * (psize / 2) ** 2 + all_area
+            # cv.circle(frame, (int(marker.pt[0]), int(marker.pt[1])), 3, (255, 0, 255), -1, 8)
+#           # cv.circle(frame, (int(marker.pt[0]), int(marker.pt[1])), int(marker.size/2), (255, 0, 255), 1, 1)
+                cv.putText(result, str('%.2f' % psize), (px, py), cv.FONT_HERSHEY_PLAIN, 1, (0, 0, 255), 1)
+                # print('**size:', marker.size)
+
+        print('All keypoints =', len(kp) ,', all small points=', small_points)
+        result = cv.drawKeypoints(result, kp, None, (0, 255, 255), cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
 #
 #            result = cv.drawMarker(frame, tuple(int(i) for i in marker.pt), color=(0, 255, 0))
-        cv.putText(result, str(len(keypoints)), (5, 20), cv.FONT_HERSHEY_PLAIN, 1.2, (0, 255, 0), 1)
+        cv.putText(result, str(len(kp)), (5, 20), cv.FONT_HERSHEY_PLAIN, 1.2, (0, 255, 0), 1)
         cv.putText(result_i, str(len(keypoints)), (5, 20), cv.FONT_HERSHEY_PLAIN, 1.2, (0, 255, 0), 1)
-        cv.imshow("result", result_i)
+        cv.imshow("blob_result", result)
         # cv.imwrite('temp_o/'+ color_t +' /result_' + file, result)
+    #-------- off Blob Detector ----------'''
     return result
 
 #240822 def edges_process(image, gray):
@@ -480,18 +808,23 @@ def edges_process(image, gray, center):
 
 
 # img_path = 'F:\\project\\bottlecap\\SAMPLES OUTSIDE\\0326\\pink\\' #'F:\\project\\bottlecap\\Samples\\' + color_t + "\\"
-img_path = 'D:\\project\\bottlecap\\test1\\in\\2024-07-22\\2\\resultNG\\' # 'D:\\project\\bottlecap\\test1\\out\\0717\\'
+# img_path = 'f:\\project\\bottlecap\\test1\\out\\green\\2024-09-19\\2\\resultNG\\' # 'D:\\project\\bottlecap\\test1\\out\\0717\\'
 # img_files = os.listdir(img_path)
+# img_path = 'e:\\logo\\red\\2024-10-30\\2\\resultNG\\'
 
-color_t = 'white'
+# color_t = 'red'
+
+color_t, img_path = read_path_color()
+
 work_path = 'temp_o/'+color_t
-sens = 8
+sens = 6
+defor = 5
 
 param = set_blob_param(color_t, 'Settings/oblob-param-newcam.xml') # add D:/project/bottlecap/code/
 max_Area = param[3]
 minSize = param[2] * (11 - sens) / 5
 # rate = (11 - sens) / 5
-
+print('MinSize = ', minSize, int(param[14] * (11-defor) / 5))
 blockSize = param[4]
 C_V = param[5]
 min_pixels = param[12]  #610000
@@ -504,11 +837,13 @@ smin = param[8]
 smax = param[9]
 vmin = param[10]
 vmax = param[11]
+slopes_pt = []
+corner_points = []
 
 if not os.path.exists(work_path):
     os.makedirs(work_path)
     os.makedirs(work_path + '_p/')
-img_files = [_ for _ in os.listdir(img_path) if (_.endswith('.jpg') or _.endswith('.png'))]
+img_files = [_ for _ in os.listdir(img_path) if (_.endswith('.jpg') or _.endswith('.png') or _.endswith('.bmp'))]
 index = 0
 while True:
 # for img_file in img_files:
@@ -529,7 +864,8 @@ while True:
     frame_res = cv.bitwise_and(frame, frame, mask=mask)
 
     #240822 img_bin, img_o7, img_o7_inv = process_img(frame_res, mask, frame.shape[1], frame.shape[0])
-    img_bin, img_o7, img_o7_inv, center = process_img(frame_res, mask, frame.shape[1], frame.shape[0])
+    # 241210 add "contours, bin_center, radius"
+    img_bin, img_o7, img_o7_inv, center, contours, bin_center, radius = process_img(frame_res, mask, frame.shape[1], frame.shape[0])
 
     #極座標處理
     polar_img = cv.linearPolar(img_o7_inv, (img_o7.shape[1]//2, img_o7.shape[0]//2), img_o7.shape[1]//2+10, cv.WARP_FILL_OUTLIERS)
@@ -542,10 +878,12 @@ while True:
     cv.imwrite('temp_o/'+color_t+ '_p/'+ img_file + '_b.png', img_bin)
     cv.imwrite('temp_o/' + color_t + '_p/' + img_file + '_o7.png', img_o7)
     cv.imwrite('temp_o/'+color_t+ '_p/'+ img_file + '_o7_inv.png', img_o7_inv)
-    img_res = process_blob(frame, frame_res, img_bin, img_o7_inv)
+    # 241210 add "contours, bin_center, radius"
+    img_res = process_blob(frame, frame_res, img_bin, img_o7_inv, contours, bin_center, radius)
 #-----------------------------------------------------------------------
     #240822 contour_img, corner_points, slopes_pt = edges_process(frame, img_o7_inv)
-    contour_img, corner_points, slopes_pt = edges_process(frame, img_o7_inv, center)
+    if param[15] == 1:
+        contour_img, corner_points, slopes_pt = edges_process(frame, img_o7_inv, center)
 #-----------------------------------------------------------------------
     white_pixels = cv.countNonZero(img_bin)
     print('pixels=', white_pixels)

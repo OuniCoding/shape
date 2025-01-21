@@ -350,9 +350,9 @@ def process_blob(file,frame, binary, output7_inv):
 #img_path = 'F:\\project\\bottlecap\\20240217_outside\\white3900\\' #'F:\\project\\bottlecap\\Samples\\' + color_t + "\\"
 # img_path = 'F:\\project\\bottlecap\\Samples\\blue\\' #'F:\\project\\bottlecap\\Samples\\' + color_t + "\\"
 # img_path = 'F:\\project\\bottlecap\\SAMPLES OUTSIDE\\0326\\pink\\' #'F:\\project\\bottlecap\\Samples\\' + color_t + "\\"
-img_path = 'F:\\project\\bottlecap\\test1\\in\\pink\\2024-07-10\\2\\resultG\\'
+img_path = 'F:\\project\\bottlecap\\test1\\in\\white\\2024-07-17\\2\\resultNG\\'
 # img_files = os.listdir(img_path)
-color_t = 'pink'
+color_t = 'white'
 work_path = 'temp_o/'+color_t
 sens = 6
 
