@@ -5,12 +5,12 @@ import numpy as np
 import os
 import glob
 
-color_t = 'red'
+color_t = 'Zsamples'
 work_path = 'F:\\project\\bottlecap\\test\\'+color_t+'_416\\'
 if not os.path.exists(work_path):
     os.makedirs(work_path)
 
-img_path = 'F:\\project\\bottlecap\\Samples\\' + color_t + "\\"
+img_path = 'F:\\project\\python\\shape\\temp\\' + color_t + '\\'  # 'F:\\project\\bottlecap\\Samples\\' + color_t + "\\"
 # img_files = os.listdir(img_path)
 img_files = [_ for _ in os.listdir(img_path) if _.endswith('.jpg')]
 # types = os.path.join(img_path, '*.jpg'), os.path.join(img_path, '*.jpeg'), os.path.join(img_path, '*.png')

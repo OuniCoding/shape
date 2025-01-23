@@ -1,9 +1,9 @@
 #!/usr/bin/python
-
+# 複製相同的label
 import os
 import shutil
 
-color_t = 'trans'
+color_t = 'Zsamples'
 source_path = 'temp/'+color_t+'_416/'
 target_path = 'temp/'+color_t+'_label/'
 
