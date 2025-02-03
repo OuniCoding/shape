@@ -91,6 +91,7 @@ def send_trig():
     if trigger:
         trigger = False
         # Label(ui, text='Trigger off', fg='#f00', justify='left').grid(column=0, row=13)
+        status.set('                            ')
         trg_sta.set('Trigger off')
         fg_color.set('red')
         sta_lab.config(fg=fg_color.get())
@@ -121,7 +122,13 @@ def send_data():
         com_sta.config(fg=sta_color.get())
         # Label(ui, textvariable=status, fg='#f00', justify='left').grid(column=1, row=2)
         return
+    elif trigger:
+        status.set('先關閉觸發')# ('First turn off the trigger!')
+        sta_color.set('#f00')
+        com_sta.config(fg=sta_color.get())
+        return
 
+    # status.set('                            ')
     a = a_slider.get()
     b = b_slider.get()
     c = c_slider.get()
