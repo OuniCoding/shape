@@ -1,5 +1,6 @@
 """
 BLOB特征分析(simpleblobdetector使用)
+param[14]針孔中心距離圓心的距離點數
 """
 
 import cv2 as cv
@@ -459,13 +460,15 @@ def process_img(frame, mask, nW, nH):
     # cv.circle(diff, (int((cx1 + cx) / 2), cy), r - 10, (0, 0, 0), 10)
     # cv.circle(diff, (int((cx1 + cx) / 2), cy), r-7, (0, 0, 0), 20)   #gold
     # 241210 cv.circle(diff, (int((cx1 + cx) / 2), cy), r - er_pixel, (0, 0, 0), int(er_pixel * (11-defor) / 5))  # white param[14]
-    cv.circle(diff, center, int(radius - er_pixel), (0, 0, 0), int(er_pixel * (11-defor) / 5))  # white param[14]
+    cv.circle(diff, center, abs(int(radius - er_pixel)), (0, 0, 0), int(er_pixel * (11-defor) / 5))  # white param[14]
+    #xxcv.circle(diff, (int((cx1 + cx) / 2), cy), r - er_pixel, (0, 0, 0), int(er_pixel * (11 - defor) / 5))
     print('er_pixel=', er_pixel)
     ret, diff = cv.threshold(diff, 127, 255, cv.THRESH_BINARY_INV)
     cv.imshow("diff0", diff)
     diff = cv.bitwise_and(diff, binary)  # 241202
     # 241210 cv.circle(diff, (int((cx1 + cx) / 2), cy), r - err_rad, (255, 255, 255), (11-defor))
-    cv.circle(diff, center, radius - err_rad, (255, 255, 255), (11 - defor))
+    cv.circle(diff, center, abs(radius - err_rad), (255, 255, 255), (11 - defor))
+    #xxcv.circle(diff, (int((cx1 + cx) / 2), cy), (r - err_rad), (255, 255, 255), (11 - defor))
     cv.imshow("diff1", diff)
 
     #240822 return diff, output7, binary    #output7_inv
@@ -542,7 +545,7 @@ def process_blob(file, frame, binary1, o7_inv, contours, center, radius):
             length = np.sqrt((cx - x) ** 2 + (cy - y) ** 2)
             print(f'Small {cnt}, area={area},(座標): ({cx}, {cy}) ')
             if length <= radius:
-                if abs(cx - x) <= 20 and abs(cy - y) <= 20:
+                if abs(cx - x) <= param[14] and abs(cy - y) <= param[14]:  # <=20
                     keypoints.append(contours[cnt])
                 all_point.append((cx, cy))
                 all_area = area + all_area
@@ -559,8 +562,14 @@ def process_blob(file, frame, binary1, o7_inv, contours, center, radius):
     # cv.imshow("BinOut", binary)
     print(f'\nKeyPoints={len(keypoints)}, all small area={all_area}, all small points={len(all_point)}')
     # result = cv.putText(frame, str(len(keypoints)) +  '  ' + str(len(all_point)), (5, 20), cv.FONT_HERSHEY_PLAIN, 1.2, (0, 255, 255), 1)
-    result = cv.putText(frame, f'{len(keypoints)}  {len(all_point)}', (5, 20), cv.FONT_HERSHEY_PLAIN, 1.2,
-                        (0, 255, 255), 1)
+    if all_area >= minSize or len(keypoints) > 0:
+        result = cv.putText(frame, f'{len(keypoints)}  {len(all_point)} X small area={all_area}', (5, 20),
+                            cv.FONT_HERSHEY_PLAIN, 1.2,
+                            (0, 0, 255), 1)
+    else:
+        result = cv.putText(frame, f'{len(keypoints)}  {len(all_point)} X small area={all_area}', (5, 20),
+                            cv.FONT_HERSHEY_PLAIN, 1.2,
+                            (0, 255, 255), 1)
 
     cv.imshow("blob_result", result)
     # ------- off find contour '''
@@ -838,14 +847,14 @@ def manual_white_balance(img, r_rate, b_rate):
 color_t, img_path = read_path_color()
 
 work_path = 'temp/'+color_t
-sens = 6    #6
+sens = 4    #6
 defor = 5
 
 param = set_blob_param(color_t, 'Settings/iblob-param-newcam.xml')
 max_Area = param[3]
 minSize = param[2] * (11 - sens) / 5
 # rate = (11 - sens) / 5
-print('MinSize = ', minSize, int(param[14] * (11-defor) / 5))
+print('MinSize = ', minSize)    #, int(param[14] * (11-defor) / 5))
 blockSize = param[4]
 C_V = param[5]
 min_pixels = param[12]  #800000
@@ -970,11 +979,11 @@ while True:
     if key & 0xff == ord('q'):
         break
     elif key == 2490368 or key == 2424832:
-        index -= 1;
+        index -= 1
         if index < 0:
             index = len(img_files)-1
     elif key == 2621440 or key == 2555904:
-        index += 1;
+        index += 1
         if index >= len(img_files):
             index = 0
     # debug

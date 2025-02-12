@@ -1,6 +1,8 @@
 """
 BLOB特征分析(simpleblobdetector使用)
+param[14]針孔中心距離圓心的距離點數
 """
+
 
 import cv2 as cv
 import numpy as np
@@ -25,8 +27,7 @@ def set_blob_param(category,para_name):
     param.append(int(root[0][id][20].attrib['value']))
 
     unit_p = diameter_v / 2 / param[13]
-    if category != 'trans':
-        param[2] = int(0.3 * 0.3 / (unit_p) ** 2) # min_Area
+    param[2] = int(0.3 * 0.3 / (unit_p) ** 2) # min_Area
 
     return param
 
@@ -68,7 +69,7 @@ def process_img(frame, mask, nW, nH):
     cv.imshow("gray2", gray2)
 
     # if color_t == 'black' or color_t == 'trans' or color_t == 'gold' or color_t == 'blue' or color_t == 'green' or color_t == 'red':
-    if color_t == 'gold':# or color_t == 'trans':
+    if color_t == 'gold':
         ret, binary = cv.threshold(gray2, thres, 255, cv.THRESH_BINARY)# + cv.THRESH_OTSU)
         binary = cv.bitwise_and(binary, mask) #240820
 
@@ -372,7 +373,7 @@ def process_blob(img,frame, binary, output7_inv, contours, center, radius):
     maxArea_dia = max_Area ** 0.5
 #'''-----
     kp_findContour = []
-    if color_t != 'black':
+    if color_t != 'black1':
         # 確保只有一個主要輪廓，找到最大的輪廓
         if len(contours) == 0:
             result = []
@@ -453,35 +454,6 @@ def process_blob(img,frame, binary, output7_inv, contours, center, radius):
 
         x, y = center
         print((x, y), radius)
-#
-#        result = cv.cvtColor(binary, cv.COLOR_GRAY2BGR)
-#        cv.circle(result, center, radius, (0, 255, 0), 1)
-#        cv.imshow("R", result)
-#
-#        # 繪製擬合圓形
-#        cv.circle(binary, center, radius, (255, 255, 255), 1)
-#        cv.imshow("Binary", binary)
-#
-#        # 檢測是否有缺陷（偏離圓形的部分）
-#        for point in contour:
-#            dist = cv.pointPolygonTest(contour, (x, y), True)
-#            if abs(dist) >= (radius - er_pixel):  # 偏差超過5個像素，標記為缺陷
-#                # cv.circle(binary, tuple(point[0]), int(abs(dist-radius)), (255, 255, 255), -1)
-#                cv.circle(binary, tuple(point[0]), 1, (255, 255, 255), -1)
-#                cv.circle(frame, tuple(point[0]), 1, (0, 0, 255), -1)
-#        cv.imshow("Binary1", binary)
-#
-#        area = cv.contourArea(contour)
-#        perimeter = cv.arcLength(contour, True)
-#
-#        # 圓形度公式：4 * π * (面積) / (周長)^2
-#        circularity = 4 * np.pi * (area / (perimeter ** 2))
-#        # 判斷是否接近圓形
-#        if 0.5 < circularity < 1.3:  # 可調整範圍
-#            cv.drawContours(binary, contour, -1, (255, 255, 255), 1)
-#        cv.circle(binary, center, radius - 3, (255, 255, 255), int(param[19]+1))
-#        cv.imshow("Binary2", binary)
-#
 #        # ''' off find contour --------
         contours, hierarchy = cv.findContours(binary, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
         # output = cv.cvtColor(binary, cv.COLOR_GRAY2BGR)
@@ -508,13 +480,17 @@ def process_blob(img,frame, binary, output7_inv, contours, center, radius):
                     continue
 
                 length = np.sqrt((cx - x) ** 2 + (cy - y) ** 2)
-                print(f'{cnt}, area={area}, Length={length}, Perimeter = {perimeter}, ', end='')
+                print(f'{cnt}, Length={length}, Perimeter = {perimeter}, ', end='')
                 print(f", (座標): ({cx}, {cy})")
+
+                # # keypoints.append((cx, cy))
+                # # 提取與繪制輪廓
+                # # cv.drawContours(frame, contours, cnt, (0, 0, 0), -1)
+                # cv.drawContours(frame, contours, cnt, (0, 0, 255), 1)
                 if length <= radius:
                     keypoints.append(contours[cnt])
                 else:
                     cv.drawContours(frame, contours, cnt, (0, 255, 0), 1)
-
                 cx_p = cx
                 cy_p = cy
             elif area < minSize and area > 10:
@@ -527,13 +503,21 @@ def process_blob(img,frame, binary, output7_inv, contours, center, radius):
 
                 length = np.sqrt((cx - x) ** 2 + (cy - y) ** 2)
                 if length <= radius:
-                    if abs(cx - x) <= 20 and abs(cy - y) <= 20:
+                    if abs(cx - x) <= param[14] and abs(cy - y) <= param[14]: # <=20
                         keypoints.append(contours[cnt])
                     all_point.append((cx, cy))
                     all_area = area + all_area
                 cv.drawContours(frame, contours, cnt, (0, 255, 128), 1)
                 # cv.drawContours(binary, contours, cnt, (255, 255, 255), -1)
-            else:
+            elif perimeter > 1000:
+                # 求解中心位置
+                mm = cv.moments(contours[cnt])
+                cx = int(mm['m10'] / mm['m00'])
+                cy = int(mm['m01'] / mm['m00'])
+                (_, _), r = cv.minEnclosingCircle(contours[cnt])
+
+                print(f'X{cnt}, radius = {r}, Perimeter = {perimeter}, area = {area}, (座標): ({cx}, {cy})')
+            #else:
                 cv.drawContours(frame, contours, cnt, (255, 0, 0), 1)
                 # cv.drawContours(binary, contours, cnt, (255, 255, 255), -1)
 
@@ -547,7 +531,11 @@ def process_blob(img,frame, binary, output7_inv, contours, center, radius):
         # cv.imshow("BinOut", binary)
         print(f'\nKeyPoints={len(keypoints)}, all small area={all_area}, all small points={len(all_point)}')
         #result = cv.putText(frame, str(len(keypoints)), (100, 20), cv.FONT_HERSHEY_PLAIN, 1.2, (0, 255, 255), 1)
-        result = cv.putText(frame, f'{len(keypoints)}  {len(all_point)} X small area={all_area}', (5, 20), cv.FONT_HERSHEY_PLAIN, 1.2,
+        if all_area >= minSize or len(keypoints) > 0:
+            result = cv.putText(frame, f'{len(keypoints)}  {len(all_point)} X small area={all_area}', (5, 20), cv.FONT_HERSHEY_PLAIN, 1.2,
+                            (0, 0, 255), 1)
+        else:
+            result = cv.putText(frame, f'{len(keypoints)}  {len(all_point)} X small area={all_area}', (5, 20), cv.FONT_HERSHEY_PLAIN, 1.2,
                             (0, 255, 255), 1)
         cv.imshow("blob_result", result)
         # ------- off find contour '''
@@ -817,14 +805,14 @@ def edges_process(image, gray, center):
 color_t, img_path = read_path_color()
 
 work_path = 'temp_o/'+color_t
-sens = 6
+sens = 5
 defor = 5
 
 param = set_blob_param(color_t, 'Settings/oblob-param-newcam.xml') # add D:/project/bottlecap/code/
 max_Area = param[3]
 minSize = param[2] * (11 - sens) / 5
 # rate = (11 - sens) / 5
-print('MinSize = ', minSize, int(param[14] * (11-defor) / 5))
+print('MinSize = ', minSize)    # , int(param[14] * (11-defor) / 5))
 blockSize = param[4]
 C_V = param[5]
 min_pixels = param[12]  #610000
