@@ -16,6 +16,17 @@ def set_blob_param(category,para_name):
         param.append(int(root[0][id][i].attrib['value']))
 
     return param
+def set_hsv_param(category,para_name):
+    param_file = ET.parse(para_name)
+    root = param_file.getroot()
+    id = 0
+    param1 = []
+    while root[0][id].tag != category:
+        id += 1
+    for i in range(0, 6):
+        param1.append(int(root[0][id][i].attrib['value']))
+
+    return param1
 
 def read_path_color(param_file):
 
@@ -80,7 +91,7 @@ def balanecd_process(img):
 # img_path = 'e:\\logo\\red\\2024-10-30\\1\\resultG\\' #'F:\\Temp\\report\\report\\image\\'#
 # img_path = 'F:\\project\\玻璃瓶\\sample\\'
 
-param_file = 'param.ini'
+param_file = 'param_out.ini'
 color, img_path = read_path_color(param_file)
 
 img_files = [_ for _ in os.listdir(img_path) if (_.endswith('.jpg') or _.endswith('.bmp') or _.endswith('.png'))]
@@ -107,8 +118,10 @@ cv2.imshow('BGR', image_s)
 # balanecd_process(image_s)
 if param_file == 'param_out.ini':
     param = set_blob_param(color, 'Settings/oblob-param-newcam.xml')
+    param1 = set_hsv_param(color, 'Settings/oblob-param-hsv.xml')
 else:
     param = set_blob_param(color, 'Settings/iblob-param-newcam.xml')
+    param1 = set_hsv_param(color, 'Settings/iblob-param-hsv.xml')
 #white in
 #hsv_low = np.array([0, 0, 98])
 #hsv_high = np.array([221, 38, 255])
@@ -119,18 +132,28 @@ else:
 hsv_low = np.array([param[6], param[8], param[10]])
 hsv_high = np.array([param[7], param[9], param[11]])
 
+hsv_low1 = np.array([param[6] + param1[0], param[8] + param1[2], param[10] + param1[4]])
+hsv_high1 = np.array([param[7] + param1[1], param[9] + param1[3], param[11] + param1[5]])
+
+
 def h_low(value):
     hsv_low[0] = value
+    hsv_low1[0] = value + param1[0]
 def h_high(value):
     hsv_high[0] = value
+    hsv_high1[0] = value + param1[1]
 def s_low(value):
     hsv_low[1] = value
+    hsv_low1[1] = value + param1[2]
 def s_high(value):
     hsv_high[1] = value
+    hsv_high1[1] = value + param1[3]
 def v_low(value):
     hsv_low[2] = value
+    hsv_low1[2] = value + param1[4]
 def v_high(value):
     hsv_high[2] = value
+    hsv_high1[2] = value + param1[5]
 
 process = psutil.Process(os.getpid())
 p_core_ids = [0, 1, 2, 3, 4, 5, 6]
@@ -156,10 +179,14 @@ cv2.setTrackbarPos('V high', 'image', hsv_high[2])
 
 index=0
 while True:
-    dst = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
-    dst = cv2.inRange(dst, hsv_low, hsv_high)
+    dst0 = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+    dst = cv2.inRange(dst0, hsv_low, hsv_high)
+    dst1 = cv2.inRange(dst0, hsv_low1, hsv_high1)
+    diff = cv2.bitwise_or(dst, dst1)
     cv2.imshow('dst', dst)
     cv2.imshow('zoom', cv2.resize(dst, (560, 560))) #(560, 560)
+    cv2.imshow('zoom1', cv2.resize(dst1, (560, 560)))  # (560, 560)
+    cv2.imshow('And', cv2.resize(diff, (560, 560)))  # (560, 560)
     key = cv2.waitKeyEx(1)
     if key & 0xff == ord('q') or key & 0xff == ord('Q'):
         break
