@@ -30,6 +30,17 @@ def set_blob_param(category,para_name):
     param[2] = int(0.3 * 0.3 / (unit_p) ** 2) # min_Area
 
     return param
+def set_hsv_param(category,para_name):
+    param_file = ET.parse(para_name)
+    root = param_file.getroot()
+    id = 0
+    param1 = []
+    while root[0][id].tag != category:
+        id += 1
+    for i in range(0, 6):
+        param1.append(int(root[0][id][i].attrib['value']))
+
+    return param1
 
 def read_path_color():
     param_file = 'param_out.ini'
@@ -474,8 +485,15 @@ def process_blob(img,frame, binary, output7_inv, contours, center, radius):
             if area >= minSize and area <= max_Area:  # trans:7000
                 # 求解中心位置
                 mm = cv.moments(contours[cnt])
-                cx = int(mm['m10'] / mm['m00'])
-                cy = int(mm['m01'] / mm['m00'])
+                # cx = int(mm['m10'] / mm['m00'])
+                # cy = int(mm['m01'] / mm['m00'])
+                if mm['m00'] != 0:
+                    cx = int(mm['m10'] / mm['m00'])
+                    cy = int(mm['m01'] / mm['m00'])
+                else:
+                    x, y, w, h = cv.boundingRect(contours[cnt])
+                    cx, cy = x + w // 2, y + h // 2  # 使用外接矩形的中心作為替代
+
                 if abs(cx - cx_p) < 5 and abs(cy - cy_p) < 5:
                     continue
 
@@ -496,8 +514,14 @@ def process_blob(img,frame, binary, output7_inv, contours, center, radius):
             elif area < minSize and area > 10:
                 # 求解中心位置
                 mm = cv.moments(contours[cnt])
-                cx = int(mm['m10'] / mm['m00'])
-                cy = int(mm['m01'] / mm['m00'])
+                # cx = int(mm['m10'] / mm['m00'])
+                # cy = int(mm['m01'] / mm['m00'])
+                if mm['m00'] != 0:
+                    cx = int(mm['m10'] / mm['m00'])
+                    cy = int(mm['m01'] / mm['m00'])
+                else:
+                    x, y, w, h = cv.boundingRect(contours[cnt])
+                    cx, cy = x + w // 2, y + h // 2  # 使用外接矩形的中心作為替代
 
                 print(f'Small {cnt}, area={area},(座標): ({cx}, {cy}) ')
 
@@ -505,15 +529,21 @@ def process_blob(img,frame, binary, output7_inv, contours, center, radius):
                 if length <= radius:
                     if abs(cx - x) <= param[14] and abs(cy - y) <= param[14]: # <=20
                         keypoints.append(contours[cnt])
-                    all_point.append((cx, cy))
+                    all_point.append(contours[cnt]) #((cx, cy)) # add drawing small points
                     all_area = area + all_area
                 cv.drawContours(frame, contours, cnt, (0, 255, 128), 1)
                 # cv.drawContours(binary, contours, cnt, (255, 255, 255), -1)
             elif perimeter > 1000:
                 # 求解中心位置
                 mm = cv.moments(contours[cnt])
-                cx = int(mm['m10'] / mm['m00'])
-                cy = int(mm['m01'] / mm['m00'])
+                # cx = int(mm['m10'] / mm['m00'])
+                # cy = int(mm['m01'] / mm['m00'])
+                if mm['m00'] != 0:
+                    cx = int(mm['m10'] / mm['m00'])
+                    cy = int(mm['m01'] / mm['m00'])
+                else:
+                    x, y, w, h = cv.boundingRect(contours[cnt])
+                    cx, cy = x + w // 2, y + h // 2  # 使用外接矩形的中心作為替代
                 (_, _), r = cv.minEnclosingCircle(contours[cnt])
 
                 print(f'X{cnt}, radius = {r}, Perimeter = {perimeter}, area = {area}, (座標): ({cx}, {cy})')
@@ -807,8 +837,10 @@ color_t, img_path = read_path_color()
 work_path = 'temp_o/'+color_t
 sens = 5
 defor = 5
+bright = 1.02
 
 param = set_blob_param(color_t, 'Settings/oblob-param-newcam.xml') # add D:/project/bottlecap/code/
+param1 = set_hsv_param(color_t, 'Settings/oblob-param-hsv.xml')
 max_Area = param[3]
 minSize = param[2] * (11 - sens) / 5
 # rate = (11 - sens) / 5
@@ -825,6 +857,7 @@ smin = param[8]
 smax = param[9]
 vmin = param[10]
 vmax = param[11]
+
 slopes_pt = []
 corner_points = []
 
@@ -839,7 +872,7 @@ while True:
     img_file = img_files[index]
     print(img_file)
     frame = cv.imread(img_path+img_file)
-    frame = cv.addWeighted(frame, 1, frame, 0, 0)
+    frame = cv.addWeighted(frame, bright, frame, 0, 0)
     cv.imshow("source", frame)
 
     hsv = cv.cvtColor(frame, cv.COLOR_BGR2HSV)
@@ -847,7 +880,12 @@ while True:
 
     hsv_low = np.array([hmin, smin, vmin])
     hsv_high = np.array([hmax, smax, vmax])
+    hsv_low1 = np.array([param[6] + param1[0], param[8] + param1[2], param[10] + param1[4]])
+    hsv_high1 = np.array([param[7] + param1[1], param[9] + param1[3], param[11] + param1[5]])
+
     mask = cv.inRange(hsv, hsv_low, hsv_high)
+    dst1 = cv.inRange(hsv, hsv_low1, hsv_high1)
+    mask = cv.bitwise_or(mask, dst1)
     cv.imshow('mask', mask)
     frame_res = cv.bitwise_and(frame, frame, mask=mask)
 
