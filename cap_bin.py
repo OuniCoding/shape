@@ -80,9 +80,9 @@ def balanecd_process(img):
 # img_path = 'e:\\logo\\red\\2024-10-30\\1\\resultG\\' #'F:\\Temp\\report\\report\\image\\'#
 # img_path = 'F:\\project\\玻璃瓶\\sample\\'
 
-param_file = 'param_out.ini'
+param_file = 'param.ini'
 color, img_path = read_path_color(param_file)
-
+bright = 1
 img_files = [_ for _ in os.listdir(img_path) if (_.endswith('.jpg') or _.endswith('.bmp') or _.endswith('.png'))]
 img_file = img_files[0]
 #image = cv2.imread('D:\\project\\bottlecap\\test1\\in\\green\\2024-07-10\\1\\resultG\\20240710_14-31-31_029.jpg')
@@ -98,6 +98,7 @@ image_array = np.frombuffer(image_data, np.uint8)
 
 # 使用 cv2.imdecode 解碼圖像解
 image = cv2.imdecode(image_array, cv2.IMREAD_COLOR)
+image = cv2.addWeighted(image, bright, image, 0, 0)  # 0517 bright
 w = image.shape[1]
 h = image.shape[0]
 image_s = cv2.resize(image, (int(w / 2), int(h / 2)))

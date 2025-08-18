@@ -91,7 +91,8 @@ def balanecd_process(img):
 # img_path = 'e:\\logo\\red\\2024-10-30\\1\\resultG\\' #'F:\\Temp\\report\\report\\image\\'#
 # img_path = 'F:\\project\\玻璃瓶\\sample\\'
 
-param_file = 'param_out.ini'
+bright = 1
+param_file = 'param.ini'
 color, img_path = read_path_color(param_file)
 
 img_files = [_ for _ in os.listdir(img_path) if (_.endswith('.jpg') or _.endswith('.bmp') or _.endswith('.png'))]
@@ -109,6 +110,7 @@ image_array = np.frombuffer(image_data, np.uint8)
 
 # 使用 cv2.imdecode 解碼圖像解
 image = cv2.imdecode(image_array, cv2.IMREAD_COLOR)
+image = cv2.addWeighted(image, bright, image, 0, 0)  # 0517 bright
 w = image.shape[1]
 h = image.shape[0]
 image_s = cv2.resize(image, (int(w / 2), int(h / 2)))
@@ -155,6 +157,16 @@ def v_high(value):
     hsv_high[2] = value
     hsv_high1[2] = value + param1[5]
 
+def bright_set(value):
+    global bright, image, image_array, image_s
+    bright = value/100
+    image = cv2.imdecode(image_array, cv2.IMREAD_COLOR)
+    image = cv2.addWeighted(image, bright, image, 0, 0)  # 0517 bright
+    w = image.shape[1]
+    h = image.shape[0]
+    image_s = cv2.resize(image, (int(w / 2), int(h / 2)))
+    cv2.imshow('BGR', image_s)
+
 process = psutil.Process(os.getpid())
 p_core_ids = [0, 1, 2, 3, 4, 5, 6]
 # 親和性設置 P-Core
@@ -169,6 +181,7 @@ cv2.createTrackbar('S low', 'image', 0, 255, s_low)
 cv2.createTrackbar('S high', 'image', 0, 255, s_high)
 cv2.createTrackbar('V low', 'image', 0, 255, v_low)
 cv2.createTrackbar('V high', 'image', 0, 255, v_high)
+cv2.createTrackbar('Bright', 'image', 0, 200, bright_set)
 
 cv2.setTrackbarPos('H low', 'image', hsv_low[0])
 cv2.setTrackbarPos('S low', 'image', hsv_low[1])
@@ -176,6 +189,7 @@ cv2.setTrackbarPos('V low', 'image', hsv_low[2])
 cv2.setTrackbarPos('H high', 'image', hsv_high[0])
 cv2.setTrackbarPos('S high', 'image', hsv_high[1])
 cv2.setTrackbarPos('V high', 'image', hsv_high[2])
+cv2.setTrackbarPos('Bright', 'image', int(bright*100))
 
 index=0
 while True:
@@ -207,6 +221,7 @@ while True:
 
         # 使用 cv2.imdecode 解碼圖像解
         image = cv2.imdecode(image_array, cv2.IMREAD_COLOR)
+        image = cv2.addWeighted(image, bright, image, 0, 0)  # 0517 bright
         w = image.shape[1]
         h = image.shape[0]
         image_s = cv2.resize(image, (int(w / 2), int(h / 2)))
@@ -233,6 +248,7 @@ while True:
 
         # 使用 cv2.imdecode 解碼圖像解
         image = cv2.imdecode(image_array, cv2.IMREAD_COLOR)
+        image = cv2.addWeighted(image, bright, image, 0, 0)  # 0517 bright
         w = image.shape[1]
         h = image.shape[0]
         image_s = cv2.resize(image, (int(w / 2), int(h / 2)))
@@ -242,6 +258,11 @@ while True:
         cv2.imshow('BGR', image_s)
         print(img_file)
         # balanecd_process(image_s)
+print(f'HSV_lo = {hsv_low}')
+print(f'HSV_hi = {hsv_high}')
+print(f'hsv_lo1 = {hsv_low1}')
+print(f'HSV_hi1 = {hsv_high1}')
+print(f'Bright = {bright}')
 
 cv2.destroyAllWindows()
 
