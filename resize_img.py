@@ -1,0 +1,31 @@
+#!/usr/bin/python
+
+import cv2
+import numpy as np
+import os
+import glob
+
+color_t = 'white'
+work_path = 'E:\\AI\\'+color_t+'\\'
+if not os.path.exists(work_path):
+    os.makedirs(work_path)
+
+img_path = 'E:\\logo\\white\\inside\\0306\\ok\\' #'D:\\logo\\trans\\2024-11-27\\1\\resultG\\'
+#img_path = 'D:\\project\\bottlecap\\test1\\0529\\pink\\'
+# img_path = 'D:\\project\\bottlecap\\Samples\\' + color_t + "\\"
+# img_files = os.listdir(img_path)
+img_files = [_ for _ in os.listdir(img_path) if _.endswith('.jpg')]
+# types = os.path.join(img_path, '*.jpg'), os.path.join(img_path, '*.jpeg'), os.path.join(img_path, '*.png')
+# files_grabbed = []
+# for files in types:
+#     files_grabbed.extend(sorted(glob.iglob(files)))
+
+for img_file in img_files:  # files_grabbed:
+    # frame = cv2.imread(img_file)
+    frame = cv2.imread(img_path + img_file)
+    res_img = cv2.resize(frame,(416,416))    #(1120, 1120)
+    cv2.imwrite(work_path + '416_' + img_file, res_img)
+    # cv2.imwrite(work_path + img_file , res_img)
+
+cv2.destroyAllWindows()
+print('Resize images, work path:', work_path)
