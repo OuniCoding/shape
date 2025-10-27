@@ -117,7 +117,7 @@ class ModbusMultiMonitor:
         # 底部說明
         ttk.Label(
             root,
-            text="每秒自動刷新暫存器 [5~9]，可獨立操作各 Slave\n預設 Slave ID = 1, 2, 3... 依序遞增",
+            text="每秒自動刷新暫存器 [5~8]，可獨立操作各 Slave\n預設 Slave ID = 1, 2, 3... 依序遞增",
             foreground="gray"
         ).pack(pady=10)
 

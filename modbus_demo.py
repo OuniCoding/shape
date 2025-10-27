@@ -9,8 +9,9 @@ Holding Register	1	targetCount (Ct)	write_register(3, val)
 Holding Register	2	triggerCount (Cs)	write_register(4, val)
 Holding Register	5	TriggerCount 回報	read_holding_registers(5,1)
 Holding Register	6	BufIndex 回報	read_holding_registers(6,1)
-Holding Register	7	OUT Done Flag	read_holding_registers(7,1)
-Holding Register	8	計時器設定值 (Timer Value)	read_holding_registers(8,1)
+Holding Register	7	OUT Flag(en_out_flag)	read_holding_registers(7,1)
+Holding Register	8	set 計時器設定值 (Timer Value)	read_holding_registers(8,1)
+Holding Register	9	get 計時器設定值 (Timer Value)	read_holding_registers(9,1)
 --------------------------------------------------------------------------------
 pip install pymodbus pyserial
 """
@@ -60,7 +61,7 @@ while True:
             client.write_coil(1, True, device_id=SLAVE_ID)  # Stop
             break
 
-    result = client.read_holding_registers(6, count=1, device_id=SLAVE_ID)
+    result = client.read_holding_registers(0, count=10, device_id=SLAVE_ID)
     if result.isError():
         print("❌ 讀取失敗")
     else:

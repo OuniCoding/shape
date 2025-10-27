@@ -1,5 +1,21 @@
 """
 python modbus_monitor.py
+-------------------------------------------------------------------------------
+對應 Arduino 暫存器表
+類型	位址	說明	Python操作
+Coil	0	啟動（Str）	write_coil(0, True)
+Coil	1	停止（Stop）	write_coil(1, True)
+Holding Register	0	Go 數值	write_register(2, val)
+Holding Register	1	targetCount (Ct)	write_register(3, val)
+Holding Register	2	triggerCount (Cs)	write_register(4, val)
+Holding Register	5	TriggerCount 回報	read_holding_registers(5,1)
+Holding Register	6	BufIndex 回報	read_holding_registers(6,1)
+Holding Register	7	OUT Flag(en_out_flag)	read_holding_registers(7,1)
+Holding Register	8	set 計時器設定值 (Timer Value)	read_holding_registers(8,1)
+Holding Register	9	get 計時器設定值 (Timer Value)	read_holding_registers(9,1)
+--------------------------------------------------------------------------------
+pip install pymodbus pyserial
+
 """
 import tkinter as tk
 from tkinter import ttk, messagebox
@@ -12,7 +28,7 @@ class ModbusGUI:
     def __init__(self, root):
         self.root = root
         self.root.title("Modbus RTU 上位機 (RS232)")
-        self.root.geometry("420x350")
+        self.root.geometry("420x360")
 
         self.client = None
         self.running = False
@@ -50,11 +66,21 @@ class ModbusGUI:
         self.go_entry.grid(row=0, column=3)
         ttk.Button(frame2, text="設定 Go", command=self.cmd_set_go).grid(row=0, column=4, padx=5)
 
-        # === 狀態顯示 ===
-        frame3 = ttk.LabelFrame(root, text="暫存器資料 (每秒更新)")
+        # === 設定區 ===
+        frame3 = ttk.LabelFrame(root, text="設定命令")
         frame3.pack(fill="x", padx=10, pady=5)
 
-        self.text = tk.Text(frame3, height=10, width=50)
+        ttk.Label(frame3, text="CutTime:").grid(row=0, column=0, padx=10, pady=5)
+        self.tim_entry = ttk.Entry(frame3, width=8)
+        self.tim_entry.insert(0, "53036")
+        self.tim_entry.grid(row=0, column=1)
+        ttk.Button(frame3, text="設定", command=self.cmd_set_tim).grid(row=0, column=2, padx=5)
+
+        # === 狀態顯示 ===
+        frame4 = ttk.LabelFrame(root, text="暫存器資料 (每秒更新)")
+        frame4.pack(fill="x", padx=10, pady=5)
+
+        self.text = tk.Text(frame4, height=10, width=50)
         self.text.pack(padx=5, pady=5)
 
         # 自動刷新執行緒
@@ -98,6 +124,11 @@ class ModbusGUI:
         if not self.client: return
         val = int(self.go_entry.get())
         self.client.write_register(0, val, device_id=self.slave_id)
+
+    def cmd_set_tim(self):
+        if not self.client: return
+        val = int(self.tim_entry.get())
+        self.client.write_register(8, val, device_id=self.slave_id)
 
     # ----------------------------
     def auto_update(self):
