@@ -8,7 +8,7 @@
 ✅ 顯示暫存器狀態（例如 5~9）
 
 """
-
+import sys
 import tkinter as tk
 from tkinter import ttk, messagebox
 import serial.tools.list_ports
@@ -104,7 +104,10 @@ class ModbusMultiMonitor:
         self.ports = [p.device for p in serial.tools.list_ports.comports()]
         if not self.ports:
             messagebox.showerror("錯誤", "未偵測到任何 COM 埠！")
-            return
+            #return
+            self.root.destroy()  # 關閉 Tk 視窗
+            sys.exit()           # 完全結束程式
+
 
         # 建立每個裝置區塊
         self.frames = []

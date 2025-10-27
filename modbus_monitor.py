@@ -89,6 +89,8 @@ class ModbusGUI:
 
     # ----------------------------
     def get_com_ports(self):
+        if serial.tools.list_ports.comports() == None:
+            return []
         return [port.device for port in serial.tools.list_ports.comports()]
 
     def connect_modbus(self):
