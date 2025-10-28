@@ -10,7 +10,7 @@ Holding Register	2	triggerCount (Cs)	write_register(4, val)
 Holding Register	5	TriggerCount 回報	read_holding_registers(5,1)
 Holding Register	6	BufIndex 回報	read_holding_registers(6,1)
 Holding Register	7	OUT Flag(en_out_flag)	read_holding_registers(7,1)
-Holding Register	8	set 計時器設定值 (Timer Value)	read_holding_registers(8,1)
+Holding Register	8	set 計時器設定值 (Timer Value)	write_register(8,val)
 Holding Register	9	get 計時器設定值 (Timer Value)	read_holding_registers(9,1)
 --------------------------------------------------------------------------------
 pip install pymodbus pyserial
