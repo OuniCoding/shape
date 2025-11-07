@@ -33,6 +33,7 @@ class ModbusGUI:
         self.client = None
         self.running = False
         self.slave_id = 1
+        self.running = False
 
         # === COM 選擇區 ===
         frame1 = ttk.LabelFrame(root, text="連線設定")
@@ -115,20 +116,28 @@ class ModbusGUI:
 
     # ----------------------------
     def cmd_start(self):
-        if not self.client: return
+        if not self.running:
+            messagebox.showerror("錯誤", "未連線到設備")
+            return
         self.client.write_coil(0, True, device_id=self.slave_id)
 
     def cmd_stop(self):
-        if not self.client: return
+        if not self.running:
+            messagebox.showerror("錯誤", "未連線到設備")
+            return
         self.client.write_coil(1, True, device_id=self.slave_id)
 
     def cmd_set_go(self):
-        if not self.client: return
+        if not self.running:
+            messagebox.showerror("錯誤", "未連線到設備")
+            return
         val = int(self.go_entry.get())
         self.client.write_register(0, val, device_id=self.slave_id)
 
     def cmd_set_tim(self):
-        if not self.client: return
+        if not self.running:
+            messagebox.showerror("錯誤", "未連線到設備")
+            return
         val = int(self.tim_entry.get())
         self.client.write_register(8, val, device_id=self.slave_id)
 

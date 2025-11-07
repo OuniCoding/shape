@@ -68,15 +68,15 @@ class ModbusDeviceFrame(ttk.LabelFrame):
             messagebox.showerror("錯誤", str(e))
 
     def cmd_start(self):
-        if self.client:
+        if self.running:
             self.client.write_coil(0, True, device_id=self.slave_id)
 
     def cmd_stop(self):
-        if self.client:
+        if self.running:
             self.client.write_coil(1, True, device_id=self.slave_id)
 
     def cmd_set_go(self):
-        if self.client:
+        if self.running:
             val = int(self.go_entry.get())
             self.client.write_register(0, val, device_id=self.slave_id)
 
@@ -104,7 +104,7 @@ class ModbusMultiMonitor:
         self.ports = [p.device for p in serial.tools.list_ports.comports()]
         if not self.ports:
             messagebox.showerror("錯誤", "未偵測到任何 COM 埠！")
-            #return
+            # return
             self.root.destroy()  # 關閉 Tk 視窗
             sys.exit()           # 完全結束程式
 
