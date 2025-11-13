@@ -5,9 +5,9 @@ python modbus_monitor.py
 類型	位址	說明	Python操作
 Coil	0	啟動（Str）	write_coil(0, True)
 Coil	1	停止（Stop）	write_coil(1, True)
-Holding Register	0	Go 數值	write_register(2, val)
-Holding Register	1	targetCount (Ct)	write_register(3, val)
-Holding Register	2	triggerCount (Cs)	write_register(4, val)
+Holding Register	0	Go 數值	write_register(0, val)
+Holding Register	1	targetCount (Ct)	write_register(1, val)
+Holding Register	2	triggerCount (Cs)	write_register(2, val)
 Holding Register	5	TriggerCount 回報	read_holding_registers(5,1)
 Holding Register	6	BufIndex 回報	read_holding_registers(6,1)
 Holding Register	7	OUT Flag(en_out_flag)	read_holding_registers(7,1)
@@ -95,6 +95,11 @@ class ModbusGUI:
         return [port.device for port in serial.tools.list_ports.comports()]
 
     def connect_modbus(self):
+        if self.running:
+            self.status_label.config(text="未連線", foreground="red")
+            self.running = False
+            self.client.close()
+            return
         port = self.combobox.get()
         baud = int(self.baud_entry.get())
 
