@@ -5,14 +5,19 @@ python modbus_monitor.py
 類型	位址	說明	Python操作
 Coil	0	啟動（Str）	write_coil(0, True)
 Coil	1	停止（Stop）	write_coil(1, True)
-Holding Register	0	Go 數值	write_register(0, val)
-Holding Register	1	targetCount (Ct)	write_register(1, val)
-Holding Register	2	triggerCount (Cs)	write_register(2, val)
-Holding Register	5	TriggerCount 回報	read_holding_registers(5,1)
-Holding Register	6	BufIndex 回報	read_holding_registers(6,1)
-Holding Register	7	OUT Flag(en_out_flag)	read_holding_registers(7,1)
-Holding Register	8	set 計時器設定值 (Timer Value)	write_register(8,val)
+Holding Register	0	Hi-byte, Go 數值	write_register(0, val)
+                    1   lo-Byte
+Holding Register	2	Hi-byte, targetCount (Ct)	write_register(1, val)
+                    3   lo-Byte
+Holding Register	4	Hi-byte, triggerCount (Cs)	write_register(2, val)
+                    5   lo-Byte
+Holding Register	6	Hi-byte, TriggerCount 回報	read_holding_registers(5,1)
+                    7   lo-Byte
+Holding Register	8	set 計時器設定值 (Timer Value)	read_holding_registers(8,1)
 Holding Register	9	get 計時器設定值 (Timer Value)	read_holding_registers(9,1)
+Holding Register	10	BufIndex 回報	read_holding_registers(6,1)
+Holding Register	11	OUT Flag(en_out_flag)	read_holding_registers(7,1)
+                    12~15 預留
 --------------------------------------------------------------------------------
 pip install pymodbus pyserial
 
@@ -28,12 +33,11 @@ class ModbusGUI:
     def __init__(self, root):
         self.root = root
         self.root.title("Modbus RTU 上位機 (RS232)")
-        self.root.geometry("420x360")
+        self.root.geometry("420x420")
 
         self.client = None
         self.running = False
         self.slave_id = 1
-        self.running = False
 
         # === COM 選擇區 ===
         frame1 = ttk.LabelFrame(root, text="連線設定")
@@ -81,7 +85,7 @@ class ModbusGUI:
         frame4 = ttk.LabelFrame(root, text="暫存器資料 (每秒更新)")
         frame4.pack(fill="x", padx=10, pady=5)
 
-        self.text = tk.Text(frame4, height=10, width=50)
+        self.text = tk.Text(frame4, height=16, width=50)
         self.text.pack(padx=5, pady=5)
 
         # 自動刷新執行緒
@@ -121,28 +125,25 @@ class ModbusGUI:
 
     # ----------------------------
     def cmd_start(self):
-        if not self.running:
-            messagebox.showerror("錯誤", "未連線到設備")
-            return
+        if not self.client: return
         self.client.write_coil(0, True, device_id=self.slave_id)
 
     def cmd_stop(self):
-        if not self.running:
-            messagebox.showerror("錯誤", "未連線到設備")
-            return
+        if not self.client: return
         self.client.write_coil(1, True, device_id=self.slave_id)
 
     def cmd_set_go(self):
-        if not self.running:
-            messagebox.showerror("錯誤", "未連線到設備")
-            return
+        if not self.client: return
         val = int(self.go_entry.get())
-        self.client.write_register(0, val, device_id=self.slave_id)
+        if val < 0 or val > 0xFFFFFFFF:
+            raise ValueError("Go 數值必須是 0~2^32-1")
+
+        high = (val >> 16) & 0xFFFF
+        low = val & 0xFFFF
+        self.client.write_registers(0, values=[high, low], device_id=self.slave_id)
 
     def cmd_set_tim(self):
-        if not self.running:
-            messagebox.showerror("錯誤", "未連線到設備")
-            return
+        if not self.client: return
         val = int(self.tim_entry.get())
         self.client.write_register(8, val, device_id=self.slave_id)
 
@@ -151,15 +152,16 @@ class ModbusGUI:
         while True:
             if self.running and self.client:
                 try:
-                    result = self.client.read_holding_registers(0, count=10, device_id=self.slave_id)
+                    result = self.client.read_holding_registers(0, count=16, device_id=self.slave_id)
                     if not result.isError():
+                        print(result.registers)
                         text = "\n".join([f"Reg[{i}] = {v}" for i, v in enumerate(result.registers)])
                         self.text.delete(1.0, tk.END)
                         self.text.insert(tk.END, text)
                 except Exception as e:
                     self.text.delete(1.0, tk.END)
                     self.text.insert(tk.END, f"讀取錯誤: {e}")
-            time.sleep(0.5)
+            time.sleep(1)
 
 # ----------------------------
 if __name__ == "__main__":
