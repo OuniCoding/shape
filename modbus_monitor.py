@@ -5,13 +5,13 @@ python modbus_monitor.py
 類型	位址	說明	Python操作
 Coil	0	啟動（Str）	write_coil(0, True)
 Coil	1	停止（Stop）	write_coil(1, True)
-Holding Register	0	Hi-byte, Go 數值	write_register(0, val)
+Holding Register	0	Hi-byte, Go 數值	write_registers(0, values=[high, low], device_id=slave_id)
                     1   lo-Byte
-Holding Register	2	Hi-byte, targetCount (Ct)	write_register(1, val)
+Holding Register	2	Hi-byte, targetCount (Ct)	write_registers(2, values=[high, low], device_id=slave_id)
                     3   lo-Byte
-Holding Register	4	Hi-byte, triggerCount (Cs)	write_register(2, val)
+Holding Register	4	Hi-byte, triggerCount (Cs)	write_registers(4, values=[high, low], device_id=slave_id)
                     5   lo-Byte
-Holding Register	6	Hi-byte, TriggerCount 回報	read_holding_registers(5,1)
+Holding Register	6	Hi-byte, TriggerCount 回報	read_holding_registers(0, count=counter, device_id=slave_id)
                     7   lo-Byte
 Holding Register	8	set 計時器設定值 (Timer Value)	read_holding_registers(8,1)
 Holding Register	9	get 計時器設定值 (Timer Value)	read_holding_registers(9,1)
