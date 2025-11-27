@@ -33,7 +33,7 @@ class ModbusGUI:
     def __init__(self, root):
         self.root = root
         self.root.title("Modbus RTU 上位機 (RS232)")
-        self.root.geometry("420x420")
+        self.root.geometry("420x440")
 
         self.client = None
         self.running = False
@@ -42,6 +42,11 @@ class ModbusGUI:
         # === COM 選擇區 ===
         frame1 = ttk.LabelFrame(root, text="連線設定")
         frame1.pack(fill="x", padx=10, pady=5)
+
+        style = ttk.Style()
+        style.configure('Red.TButton', foreground='red')  # 設定名為 Red.TButton 的樣式，字體紅色
+        style.configure('Green.TButton', foreground='green')  # 設定名為 Green.TButton 的樣式，字體綠色
+        style.configure('Blue.TButton', foreground='blue')  # 設定名為 Blue.TButton 的樣式，字體藍色
 
         ttk.Label(frame1, text="通訊埠:").grid(row=0, column=0, padx=5, pady=5)
         self.combobox = ttk.Combobox(frame1, width=10, values=self.get_com_ports())
@@ -63,13 +68,13 @@ class ModbusGUI:
         frame2 = ttk.LabelFrame(root, text="控制命令")
         frame2.pack(fill="x", padx=10, pady=5)
 
-        ttk.Button(frame2, text="▶ Start", command=self.cmd_start).grid(row=0, column=0, padx=10, pady=5)
-        ttk.Button(frame2, text="⏹ Stop", command=self.cmd_stop).grid(row=0, column=1, padx=10)
+        ttk.Button(frame2, text="▶ Start", command=self.cmd_start, style='Green.TButton').grid(row=0, column=0, padx=10, pady=5)
+        ttk.Button(frame2, text="⏹ Stop", command=self.cmd_stop, style='Red.TButton').grid(row=0, column=1, padx=10)
         ttk.Label(frame2, text="Go:").grid(row=0, column=2)
         self.go_entry = ttk.Entry(frame2, width=6)
-        self.go_entry.insert(0, "100")
+        self.go_entry.insert(0, "0")  # 初始值
         self.go_entry.grid(row=0, column=3)
-        ttk.Button(frame2, text="設定 Go", command=self.cmd_set_go).grid(row=0, column=4, padx=5)
+        ttk.Button(frame2, text="設定 Go", command=self.cmd_set_go, style='Blue.TButton').grid(row=0, column=4, padx=5)
 
         # === 設定區 ===
         frame3 = ttk.LabelFrame(root, text="設定命令")
@@ -77,9 +82,9 @@ class ModbusGUI:
 
         ttk.Label(frame3, text="CutTime:").grid(row=0, column=0, padx=10, pady=5)
         self.tim_entry = ttk.Entry(frame3, width=8)
-        self.tim_entry.insert(0, "53036")
+        self.tim_entry.insert(0, "53036") # 初始值
         self.tim_entry.grid(row=0, column=1)
-        ttk.Button(frame3, text="設定", command=self.cmd_set_tim).grid(row=0, column=2, padx=5)
+        ttk.Button(frame3, text="設定", command=self.cmd_set_tim, style='Blue.TButton').grid(row=0, column=2, padx=5)
 
         # === 狀態顯示 ===
         frame4 = ttk.LabelFrame(root, text="暫存器資料 (每秒更新)")
@@ -126,11 +131,13 @@ class ModbusGUI:
     # ----------------------------
     def cmd_start(self):
         if not self.client: return
-        self.client.write_coil(0, True, device_id=self.slave_id)
+        if self.running:
+            self.client.write_coil(0, True, device_id=self.slave_id)
 
     def cmd_stop(self):
         if not self.client: return
-        self.client.write_coil(1, True, device_id=self.slave_id)
+        if self.running:
+            self.client.write_coil(1, True, device_id=self.slave_id)
 
     def cmd_set_go(self):
         if not self.client: return
@@ -140,12 +147,14 @@ class ModbusGUI:
 
         high = (val >> 16) & 0xFFFF
         low = val & 0xFFFF
-        self.client.write_registers(0, values=[high, low], device_id=self.slave_id)
+        if self.running:
+            self.client.write_registers(0, values=[high, low], device_id=self.slave_id)
 
     def cmd_set_tim(self):
         if not self.client: return
         val = int(self.tim_entry.get())
-        self.client.write_register(8, val, device_id=self.slave_id)
+        if self.running:
+            self.client.write_register(8, val, device_id=self.slave_id)
 
     # ----------------------------
     def auto_update(self):
