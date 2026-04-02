@@ -161,12 +161,27 @@ class ModbusGUI:
         while True:
             if self.running and self.client:
                 try:
-                    result = self.client.read_holding_registers(0, count=16, device_id=self.slave_id)
+                    text = []
+                    result = self.client.read_holding_registers(0, count=10, device_id=self.slave_id)
                     if not result.isError():
                         print(result.registers)
-                        text = "\n".join([f"Reg[{i}] = {v}" for i, v in enumerate(result.registers)])
-                        self.text.delete(1.0, tk.END)
-                        self.text.insert(tk.END, text)
+                        for i, v in enumerate(result.registers):
+                            text.append(f"Reg[{i}] = {v}")
+                    else:
+                        text.append("讀取 Register 失敗")
+                    # === 讀 Coil 0,1 ===
+                    coil_result = self.client.read_coils(address=0, count=2, device_id=self.slave_id)
+                    if not coil_result.isError():
+                        print(coil_result.registers)
+                        coils = coil_result.bits
+                        text.append("\n--- Coil 狀態 ---")
+                        text.append(f"M200 = {coils[0]}")
+                        text.append(f"M201 = {coils[1]}")
+                    else:
+                        text.append("讀取 Coil 失敗")
+
+                    self.text.delete(1.0, tk.END)
+                    self.text.insert(tk.END, '\n'.join(text))
                 except Exception as e:
                     self.text.delete(1.0, tk.END)
                     self.text.insert(tk.END, f"讀取錯誤: {e}")
