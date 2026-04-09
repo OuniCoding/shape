@@ -6,20 +6,14 @@ sys.setrecursionlimit(sys.getrecursionlimit() * 5)
 
 block_cipher = None
 
-exts = ['jpg','dll','ini','txt','pdf','config','ico','pdb','exe','xml','db','json']
+exts = ['json','jpg','png','dll','ini','txt','pdf','config','ico','pdb','exe','xml','db']
 
 extra_files = []
 for ext in exts:
-    extra_files += [(f, '.') for f in glob(fr'..\*.{ext}')]
+    extra_files += [(f, '.') for f in glob(fr'.\\*.{ext}')]
 
-data_file = [
-    ('..\\cfg','.\\cfg'),
-    ('..\\data','.\\data'),
-    ('..\\font','.\\font'),
-    ('..\\Settings','.\\Settings'),
-    ('..\\weights','.\\weights'),
-    ('..\\MvImport','.\\MvImport'),
-    ] + extra_files
+data_file = [] + extra_files
+print(data_file)
 
 a = Analysis(
     ['modbusTCP_monitor.py'],
@@ -41,28 +35,26 @@ pyz = PYZ(a.pure, a.zipped_data, cipher=block_cipher)
 exe = EXE(
     pyz,
     a.scripts,
-    [],
-    exclude_binaries=True,
-    name='OUNI_mutil',
-    debug=False,
-    bootloader_ignore_signals=False,
-    strip=False,
-    upx=True,
-    console=True,
-    disable_windowed_traceback=False,
-    argv_emulation=False,
-    target_arch=None,
-    codesign_identity=None,
-    entitlements_file=None,
-    icon='.\\logo.ico',
-)
-coll = COLLECT(
-    exe,
     a.binaries,
     a.zipfiles,
     a.datas,
+    [],
+    exclude_binaries=False,
+    name='modbusTCP',
+    debug=False,
+    bootloader_ignore_signals=False,
     strip=False,
+    console=True,
     upx=True,
-    upx_exclude=[],
-    name='modbusTCP_monitor',
+    icon='.\\Modbus_TCP.png',
 )
+#coll = COLLECT(
+#    exe,
+#    a.binaries,
+#    a.zipfiles,
+#    a.datas,
+#    strip=False,
+#    upx=True,
+#    upx_exclude=[],
+#    name='modbusTCP'
+#)

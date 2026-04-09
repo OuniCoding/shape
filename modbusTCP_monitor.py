@@ -8,10 +8,11 @@ Coil	M201	停止（Stop）	write_coil(1, True)
 Coil    M202    回傳PLC完成剔除訊號
 Coil    M203    接收PC計數歸零訊號
 Coil    M204    回傳PLC歸零完成訊號
-Holding Register	D200	lo-byte, Go 數值	write_registers(0, values=[high, low], device_id=slave_id)
+Holding Register	D200	lo-byte, Go 數值	write_registers(0, values=[high, low])
                     D201    hi-Byte
-Holding Register	D202	lo-byte, targetCount (Ct)	write_registers(2, values=[high, low], device_id=slave_id)
+Holding Register	D202	lo-byte, targetCount (Ct)	write_registers(2, values=[high, low])
                     D203    hi-Byte
+Holding Register	D204	set 計時器設定值 (Timer Value)	write_holding_registers(204,Value)
 -------------------------------------------------------------------------------
 對應 Arduino 暫存器表
 類型	位址	說明	Python操作
@@ -52,7 +53,7 @@ class ModbusGUI:
     def __init__(self, root):
         self.root = root
         self.root.title("Modbus TCP 上位機")
-        self.root.geometry("420x480")
+        self.root.geometry("420x520")
 
         self.client = None
         self.running = False
@@ -61,6 +62,9 @@ class ModbusGUI:
         self.key_running = False
 
         self.root.bind("<Key>", self.on_key_press)
+
+        self.reg_addr = 0
+        self.coil_addr = 0
 
         # ===  連線設定 ===
         frame1 = ttk.LabelFrame(root, text="連線設定")
@@ -102,11 +106,23 @@ class ModbusGUI:
         frame3 = ttk.LabelFrame(root, text="設定命令")
         frame3.pack(fill="x", padx=10, pady=5)
 
-        ttk.Label(frame3, text="CutTime:").grid(row=0, column=0, padx=10, pady=5)
-        self.tim_entry = ttk.Entry(frame3, width=8)
-        self.tim_entry.insert(0, "53036") # 初始值
+        ttk.Label(frame3, text="CutTime(ms):").grid(row=0, column=0, padx=10, pady=5, sticky='e')
+        self.tim_entry = ttk.Entry(frame3, width=8, justify=tk.CENTER)
+        # self.tim_entry.insert(0, "100") # 初始值
         self.tim_entry.grid(row=0, column=1)
         ttk.Button(frame3, text="設定", command=self.cmd_set_tim, style='Blue.TButton').grid(row=0, column=2, padx=5)
+
+        ttk.Label(frame3, text="暫存器起始位址:").grid(row=1, column=0, padx=10, pady=5, sticky='e')
+        self.reg_entry = ttk.Entry(frame3, width=5, justify=tk.CENTER)
+        # self.reg_entry.insert(0, "200") # 初始值
+        self.reg_entry.grid(row=1, column=1)
+        ttk.Button(frame3, text="設定", command=self.reg_set_tim, style='Blue.TButton').grid(row=1, column=2, padx=5)
+
+        ttk.Label(frame3, text="線圈起始位址:").grid(row=2, column=0, padx=10, pady=5, sticky='e')
+        self.coil_entry = ttk.Entry(frame3, width=5, justify=tk.CENTER)
+        # self.coil_entry.insert(0, "200") # 初始值
+        self.coil_entry.grid(row=2, column=1)
+        ttk.Button(frame3, text="設定", command=self.coil_set_tim, style='Blue.TButton').grid(row=2, column=2, padx=5)
 
         # === 狀態顯示 ===
         frame4 = ttk.LabelFrame(root, text="暫存器資料 (每秒更新)")
@@ -125,7 +141,10 @@ class ModbusGUI:
     def save_config(self):
         data = {
             "ip": self.ip_entry.get(),
-            "port": self.port_entry.get()
+            "port": self.port_entry.get(),
+            "register": self.reg_entry.get(),
+            "coil": self.coil_entry.get(),
+            "cuttime": self.tim_entry.get()
         }
         with open(CONFIG_FILE, "w") as f:
             json.dump(data, f)
@@ -135,9 +154,20 @@ class ModbusGUI:
                 data = json.load(f)
                 self.ip_entry.insert(0, data.get("ip", "192.168.0.5"))
                 self.port_entry.insert(0, data.get("port", "502"))
+                self.reg_entry.insert(0, data.get("register", "200"))
+                self.coil_entry.insert(0, data.get("coil", "200"))
+                self.tim_entry.insert(0, data.get("cuttime", "100"))
+                self.reg_addr = int(self.reg_entry.get())
+                self.coil_addr = int(self.coil_entry.get())
         except:
             self.ip_entry.insert(0, "192.168.0.5")
             self.port_entry.insert(0, "502")
+            self.reg_entry.insert(0, "200")
+            self.coil_entry.insert(0, "200")
+            self.tim_entry.insert(0, "100")
+            self.reg_addr = int(self.reg_entry.get())
+            self.coil_addr = int(self.coil_entry.get())
+        # print(self.reg_addr, self.coil_addr)
     # ----------------------------
     def scan_plc(self):
         self.text.insert(tk.END, "開始掃描...\n")
@@ -239,13 +269,13 @@ class ModbusGUI:
     def cmd_start(self):
         if not self.client: return
         if self.running:
-            self.client.write_coil(0, True)
+            self.client.write_coil(self.coil_addr, True)
             self.counter = 0
             self.key_running = True
     def cmd_stop(self):
         if not self.client: return
         if self.running:
-            self.client.write_coil(1, True)
+            self.client.write_coil(self.coil_addr+1, True)
             self.key_running = False
     def send_counter(self):
         if not self.client or not self.running:
@@ -256,14 +286,22 @@ class ModbusGUI:
         high = (val >> 16) & 0xFFFF
         low = val & 0xFFFF
 
-        self.client.write_registers(0, values=[low, high])
+        self.client.write_registers(self.reg_addr, values=[low, high])
         print(f"送出 Counter: {val}")
 
     def cmd_set_tim(self):
-        if not self.client: return
         val = int(self.tim_entry.get())
+        self.save_config()
+        if not self.client: return
         if self.running:
-            self.client.write_register(8, val)
+            self.client.write_register(self.reg_addr+4, val)
+
+    def reg_set_tim(self):
+        self.reg_addr = int(self.reg_entry.get())
+        self.save_config()
+    def coil_set_tim(self):
+        self.coil_addr = int(self.coil_entry.get())
+        self.save_config()
 
     # ----------------------------
     def auto_update(self):
@@ -272,16 +310,16 @@ class ModbusGUI:
                 try:
                     text = []
                     # --- read holding registers ---
-                    result = self.client.read_holding_registers(0, count=4)
+                    result = self.client.read_holding_registers(address=self.reg_addr, count=5)
                     if not result.isError():
                         print(result.registers)
                         for i, v in enumerate(result.registers):
-                            text.append(f"D20[{i}] = {v}")
+                            text.append(f"D[{i}] = {v}")
                     else:
                         text.append("讀取 Register 失敗")
 
                     # === 讀 Coil 2~4 ===
-                    coil_result = self.client.read_coils(address=0, count=5)
+                    coil_result = self.client.read_coils(address=self.coil_addr, count=5)
                     if not coil_result.isError():
                         coils = coil_result.bits
 
