@@ -60,7 +60,7 @@ class ModbusGUI:
         self.running = False
 
         self.counter = 0
-        self.key_running = True #False
+        self.key_running = False
 
         # self.root.bind("<Key>", self.on_key_press)
         # === 全域鍵盤監聽 ===

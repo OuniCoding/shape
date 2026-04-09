@@ -102,6 +102,9 @@ class ModbusGUI:
         ttk.Button(frame2, text="▶ Start", command=self.cmd_start, style='Green.TButton').grid(row=0, column=0, padx=10, pady=5)
         ttk.Button(frame2, text="⏹ Stop", command=self.cmd_stop, style='Red.TButton').grid(row=0, column=1, padx=10)
 
+        self.counter_label = ttk.Label(frame2, text="Counter: 0")
+        self.counter_label.grid(row=0, column=2, padx=10)
+
         # === 設定區 ===
         frame3 = ttk.LabelFrame(root, text="設定命令")
         frame3.pack(fill="x", padx=10, pady=5)
@@ -222,6 +225,7 @@ class ModbusGUI:
 
         # 任意鍵 +1
         self.counter += 1
+        self.root.after(0, lambda: self.counter_label.config(text=f"Counter: {self.counter}"))
         print(f"Key: {key}, Counter: {self.counter}")
 
         # 按 N → 發送
