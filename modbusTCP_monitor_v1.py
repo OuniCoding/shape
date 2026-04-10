@@ -342,7 +342,7 @@ class ModbusGUI:
                     if not result.isError():
                         print(result.registers)
                         for i, v in enumerate(result.registers):
-                            text.append(f"D[{i}] = {v}")
+                            text.append(f"D[{self.reg_addr + i}] = {v}")
                     else:
                         text.append("讀取 Register 失敗")
 
@@ -352,11 +352,11 @@ class ModbusGUI:
                         coils = coil_result.bits
 
                         text.append("\n--- Coil 狀態 ---")
-                        text.append(f"M200 = {coils[0]}")
-                        text.append(f"M201 = {coils[1]}")
-                        text.append(f"M202 = {coils[2]}")
-                        text.append(f"M203 = {coils[3]}")
-                        text.append(f"M204 = {coils[4]}")
+                        text.append(f"M[{self.coil_addr}] = {coils[0]}")
+                        text.append(f"M[{self.coil_addr + 1}] = {coils[1]}")
+                        text.append(f"M[{self.coil_addr + 2}] = {coils[2]}")
+                        text.append(f"M[{self.coil_addr + 3}] = {coils[3]}")
+                        text.append(f"M[{self.coil_addr + 4}] = {coils[4]}")
                     else:
                         text.append("讀取 Coil 失敗")
 
