@@ -158,6 +158,9 @@ class PLC_GUI:
         while True:
             try:
                 coils = context[0].getValues(1, 0, count=5)
+                if coils[1] == 1:    # Stop
+                    context[0].setValues(3, 0, [0, 0])
+                    context[0].setValues(3, 2, [0, 0])
                 regs = context[0].getValues(3, 0, count=5)
                 # d200_201 = context[0].getValues(3, 0, count=2)
                 # d202_203 = context[0].getValues(3, 2, count=2)
