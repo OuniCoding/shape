@@ -299,6 +299,7 @@ class ModbusGUI:
         if self.running:
             self.client.write_coil(self.coil_addr, True)
             self.counter = 0
+            self.root.after(0, lambda: self.counter_label.config(text=f"Counter: {self.counter}"))
             self.key_running = True
     def cmd_stop(self):
         if not self.client: return
