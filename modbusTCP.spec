@@ -16,7 +16,7 @@ data_file = [] + extra_files
 print(data_file)
 
 a = Analysis(
-    ['modbusTCP_monitor.py'],
+    ['modbusTCP_monitor_v1.py'],
     pathex=[],
     binaries=[],
     datas=data_file,
