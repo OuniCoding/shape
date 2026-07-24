@@ -112,13 +112,14 @@ fig, ax = plt.subplots(figsize=(6, 4))
 labels = ['EPC 施工\n40%', '運維\n30%', '改造升級\n20%', 'AI 部署\n10%']
 sizes = [40, 30, 20, 10]
 colors = ['#2B6CB4', '#2E8B57', '#D4692A', '#6B4C9A']
+explode = (0.002, 0.002, 0.002, 0.002)
 # wedges, texts = ax.pie(sizes, colors=colors, startangle=90,
 #                         textprops={'fontsize': 10, 'color': 'white', 'weight': 'bold'})
 # for i, text in enumerate(texts):
 #     text.set_text(labels[i])
 wedges, texts, autotexts = ax.pie(
     sizes,
-    # explode=explode,
+    explode=explode,
     labels=labels,              # ← 必須在這裡傳入 labels
     colors=colors,
     startangle=90,
