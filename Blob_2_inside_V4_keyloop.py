@@ -874,7 +874,7 @@ color_t, img_path = read_path_color()
 
 work_path = 'temp/'+color_t
 sens = 4    #4
-defor = 2
+defor = 4
 bright = 1
 
 param = set_blob_param(color_t, 'Settings/iblob-param.xml')  #Settings/iblob-param-newcam.xml

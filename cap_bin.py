@@ -106,7 +106,7 @@ image_s = cv2.resize(image, (int(w / 2), int(h / 2)))
 
 cv2.imshow('BGR', image_s)
 # balanecd_process(image_s)
-if param_file == 'param_out.ini':
+if param_file == 'param.ini':
     param = set_blob_param(color, 'Settings/oblob-param-newcam.xml')
 else:
     param = set_blob_param(color, 'Settings/iblob-param-newcam.xml')
@@ -142,7 +142,9 @@ process.cpu_affinity(p_core_ids)
 print("Current CPU affinity:", process.cpu_affinity())
 
 
-cv2.namedWindow('image')
+# cv2.namedWindow('image')
+cv2.namedWindow("image", cv2.WINDOW_NORMAL)   # 必須使用 WINDOW_NORMAL
+cv2.resizeWindow("image", 1000, 300)          # 設定視窗大小
 cv2.createTrackbar('bin low', 'image', 0, 255, h_low)
 #cv2.createTrackbar('H high', 'image', 0, 255, h_high)
 #cv2.createTrackbar('S low', 'image', 0, 255, s_low)
@@ -163,8 +165,8 @@ while True:
     #dst = cv2.inRange(dst, hsv_low, hsv_high)
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     gray2 = cv2.GaussianBlur(gray, (param[0], param[0]), 0)
-    ret, dst = cv2.threshold(gray2, hsv_low[0], 255, cv2.THRESH_BINARY)
-    cv2.imshow('dst', dst)
+    ret, dst = cv2.threshold(gray, hsv_low[0], 255, cv2.THRESH_BINARY)
+    # cv2.imshow('dst', dst)
     cv2.imshow('zoom', cv2.resize(dst, (560, 560))) #(560, 560)
     key = cv2.waitKeyEx(1)
     if key & 0xff == ord('q') or key & 0xff == ord('Q'):

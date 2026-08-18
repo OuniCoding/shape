@@ -92,7 +92,7 @@ def balanecd_process(img):
 # img_path = 'F:\\project\\玻璃瓶\\sample\\'
 
 bright = 1
-param_file = 'param_out.ini'
+param_file = 'param.ini'
 color, img_path = read_path_color(param_file)
 
 img_files = [_ for _ in os.listdir(img_path) if (_.endswith('.jpg') or _.endswith('.bmp') or _.endswith('.png'))]
@@ -119,7 +119,7 @@ image_s = cv2.resize(image, (int(w / 2), int(h / 2)))
 cv2.imshow('BGR', image_s)
 # balanecd_process(image_s)
 if param_file == 'param_out.ini':
-    param = set_blob_param(color, 'Settings/oblob-param-newcam.xml')
+    param = set_blob_param(color, 'Settings/oblob-param.xml')
     param1 = set_hsv_param(color, 'Settings/oblob-param-hsv.xml')
 else:
     param = set_blob_param(color, 'Settings/iblob-param.xml')
@@ -193,6 +193,9 @@ cv2.setTrackbarPos('Bright', 'image', int(bright*100))
 
 index=0
 while True:
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    cv2.imshow("gray", cv2.resize(gray, (560, 560)))
+
     dst0 = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
     dst = cv2.inRange(dst0, hsv_low, hsv_high)
     dst1 = cv2.inRange(dst0, hsv_low1, hsv_high1)
