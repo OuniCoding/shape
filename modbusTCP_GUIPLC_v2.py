@@ -35,16 +35,16 @@ class PLCRegisterBlock(ModbusSequentialDataBlock):
 
         # 先建立原本的資料區
         self.data = {
-            200: 0,   # D200
-            201: 0,   # D201
-            202: 0,   # D202
-            203: 0,   # D203
-            204: 0,   # D204
+            201: 0,   # D200
+            202: 0,   # D201
+            203: 0,   # D202
+            204: 0,   # D203
+            205: 0,   # D204
         }
 
         # 額外建立 D20000 ~ D20024
         # D20000 ~ D20024
-        for address in range(20000, 20025):
+        for address in range(20001, 20026):     # for address in range(20000, 20025):
             self.data[address] = 0
 
     # --------------------------------------------------------
@@ -293,8 +293,8 @@ class PLC_GUI:
 
             # context[0].setValues(3, 2, [low, high])
 
-            hr_block.set_D(202, low)
-            hr_block.set_D(203, high)
+            hr_block.set_D(203, low)    # 202
+            hr_block.set_D(204, high)   # 203
 
         except Exception as e:
             print("D202/D203 寫入錯誤:", e)
@@ -304,10 +304,11 @@ class PLC_GUI:
     # ========================================================
     def write_d20000(self):
         try:
-            address = int(self.d_address_entry.get())
+            address = int(self.d_address_entry.get()) + 1
             value = int(self.d_value_entry.get())
 
-            if not (20000 <= address <= 20024):
+            # if not (20000 <= address <= 20024):
+            if not (20001 <= address <= 20026):
                 raise ValueError("D位址必須在 D20000 ~ D20024")
 
             # hr_block.setValues(address,[value])
@@ -324,27 +325,28 @@ class PLC_GUI:
                 if coils[1] == 1:    # Stop
                     # context[0].setValues(3, 0, [0, 0])
                     # context[0].setValues(3, 2, [0, 0])
-                    hr_block.set_D(200, 0)
-                    hr_block.set_D(201, 0)
-                    hr_block.set_D(202, 0)
-                    hr_block.set_D(203, 0)
+                    hr_block.set_D(201, 0)  # D200
+                    hr_block.set_D(202, 0)  # D201
+                    hr_block.set_D(203, 0)  # D202
+                    hr_block.set_D(204, 0)  # D203
 
                 # ============================================
                 # 原本 D200 ~ D204
                 # ============================================
                 regs = [
-                    hr_block.get_D(200),
-                    hr_block.get_D(201),
-                    hr_block.get_D(202),
-                    hr_block.get_D(203),
-                    hr_block.get_D(204),
+                    hr_block.get_D(201),          # D200
+                    hr_block.get_D(202),          # D201
+                    hr_block.get_D(203),          # D202
+                    hr_block.get_D(204),          # D203
+                    hr_block.get_D(205),          # D204
                 ]
                 # ============================================
                 # D20000 ~ D20024
                 # ============================================
                 d20000_regs = [
                     hr_block.get_D(address)
-                    for address in range(20000, 20025)
+                    # for address in range(20000, 20025)
+                    for address in range(20001, 20026)
                 ]
 
                 text = []

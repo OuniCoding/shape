@@ -5,9 +5,11 @@ python modbus_monitor.py
 類型	位址	說明	Python操作
 Coil	M200	啟動（Str）	write_coil(0, True)
 Coil	M201	停止（Stop）	write_coil(1, True)
-Coil    M202    回傳PLC完成剔除訊號
-Coil    M203    接收PC計數歸零訊號
-Coil    M204    回傳PLC歸零完成訊號
+Coil    M202    NG剔除信號
+Coil    M210    接收PLC計數歸零START訊號
+Coil    M211    接收PLC計數歸零STOP訊號
+Coil    M212    回傳PLC完成剔除訊號
+Coil    M213    接收PLC歸零完成訊號
 Holding Register	D200	lo-byte, targetCount (Ct)	write_registers(0, values=[high, low])
                     D201    hi-Byte
 Holding Register	D202	lo-byte, Go 數值	write_registers(2, values=[high, low])
@@ -317,8 +319,8 @@ class ModbusGUI:
         high = (val >> 16) & 0xFFFF
         low = val & 0xFFFF
 
-        # self.client.write_registers(self.reg_addr + 2, values=[low, high])
-        self.client.write_registers(self.reg_addr+1, values=[low, high])
+        self.client.write_registers(self.reg_addr + 2, values=[low, high])
+        # self.client.write_registers(self.reg_addr+1, values=[low, high])
         print(f"送出 Counter: {val}")
 
     def send_total_counter(self):
@@ -330,8 +332,8 @@ class ModbusGUI:
         high = (val >> 16) & 0xFFFF
         low = val & 0xFFFF
 
-        # self.client.write_registers(self.reg_addr, values=[low, high])
-        self.client.write_registers(self.reg_addr-1, values=[low, high])
+        self.client.write_registers(self.reg_addr, values=[low, high])
+        # self.client.write_registers(self.reg_addr-1, values=[low, high])
         print(f"送出 Counter: {val}")
 
     def cmd_set_tim(self):
@@ -340,8 +342,8 @@ class ModbusGUI:
         if not self.client: return
         if self.running:
             # self.client.write_register(self.reg_addr+4, val)
-            # self.client.write_register(20000, val)
-            self.client.write_register(20000 + 1, val)
+            self.client.write_registers(20002, values=[val])  # self.client.write_register(20002, val)
+            # self.client.write_register(20000 + 1, val)
 
     def reg_set_tim(self):
         self.reg_addr = int(self.reg_entry.get())
@@ -358,7 +360,7 @@ class ModbusGUI:
                     text = []
                     # --- read holding registers ---
                     # result = self.client.read_holding_registers(address=self.reg_addr, count=5)
-                    result = self.client.read_holding_registers(address=self.reg_addr -1, count=5)
+                    result = self.client.read_holding_registers(address=self.reg_addr, count=5)
                     if not result.isError():
                         print(result.registers)
                         for i, v in enumerate(result.registers):
