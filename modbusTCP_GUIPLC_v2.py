@@ -144,7 +144,7 @@ class PLC_GUI:
     def __init__(self, root):
         self.root = root
         self.root.title("PLC 模擬器 (Modbus TCP 3.x)")
-        self.root.geometry("600x860")   # ("420x500")
+        self.root.geometry("600x900")   # ("420x500")
 
         # ===== Server 控制 =====
         frame0 = ttk.LabelFrame(root, text="Server 控制")
@@ -162,11 +162,13 @@ class PLC_GUI:
         self.status.grid(row=0, column=2, padx=10)
 
         # ===== Coil 控制 =====
-        frame1 = ttk.LabelFrame(root, text="Coil 控制 (M200~M204)")
+        frame1 = ttk.LabelFrame(root, text="Coil 控制 (M200~M213)")
         frame1.pack(fill="x", padx=10, pady=5)
 
         self.coil_vars = []
-        for i in range(5):
+        for i in range(14):
+            if (i >= 3 and i <= 9):
+                continue
             var = tk.IntVar()
             chk = ttk.Checkbutton(
                 frame1,
@@ -321,7 +323,7 @@ class PLC_GUI:
     def update_view(self):
         while True:
             try:
-                coils = context[0].getValues(1, 0, count=5)
+                coils = context[0].getValues(1, 0, count=14)
                 if coils[1] == 1:    # Stop
                     # context[0].setValues(3, 0, [0, 0])
                     # context[0].setValues(3, 2, [0, 0])
@@ -365,8 +367,10 @@ class PLC_GUI:
                 for i, v in enumerate(d20000_regs):
                     text.append(f"D{20000+i:<5} = {v}")
 
-                text.append("=== Coil M200 ~ M204 ===")
+                text.append("=== Coil M200 ~ M213 ===")
                 for i, v in enumerate(coils):
+                    if (i >= 3 and i <= 9):
+                        continue
                     text.append(f"M{200+i} = {v}")
 
                 self.text.delete(1.0, tk.END)

@@ -368,17 +368,30 @@ class ModbusGUI:
                     else:
                         text.append("讀取 Register 失敗")
 
-                    # === 讀 Coil 2~4 ===
-                    coil_result = self.client.read_coils(address=self.coil_addr, count=5)
+                    result_cut_time = self.client.read_holding_registers(address=20002, count=1)
+                    if not result_cut_time.isError():
+                        print(result_cut_time.registers)
+                        v = result_cut_time.registers[0]
+                        text.append(f"D[{20002}] = {v}")
+                    else:
+                        text.append("讀取 D20002 失敗")
+
+                    # === 讀 Coil 0~13 ===
+                    coil_result = self.client.read_coils(address=self.coil_addr, count=14)
                     if not coil_result.isError():
                         coils = coil_result.bits
 
                         text.append("\n--- Coil 狀態 ---")
-                        text.append(f"M[{self.coil_addr}] = {coils[0]}")
-                        text.append(f"M[{self.coil_addr + 1}] = {coils[1]}")
-                        text.append(f"M[{self.coil_addr + 2}] = {coils[2]}")
-                        text.append(f"M[{self.coil_addr + 3}] = {coils[3]}")
-                        text.append(f"M[{self.coil_addr + 4}] = {coils[4]}")
+                        for i in range(14):
+                            if (i >= 3 and i <= 9):
+                                continue
+                            text.append(f"M[{self.coil_addr + i}] = {coils[i]}")
+
+                        # text.append(f"M[{self.coil_addr}] = {coils[0]}")
+                        # text.append(f"M[{self.coil_addr + 1}] = {coils[1]}")
+                        # text.append(f"M[{self.coil_addr + 2}] = {coils[2]}")
+                        # text.append(f"M[{self.coil_addr + 3}] = {coils[3]}")
+                        # text.append(f"M[{self.coil_addr + 4}] = {coils[4]}")
                     else:
                         text.append("讀取 Coil 失敗")
 
