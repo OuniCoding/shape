@@ -71,7 +71,7 @@ class PLCRegisterBlock(ModbusSequentialDataBlock):
             addr = address + i
 
             if addr in self.data:
-                result.append(self.data[addr])
+                result.append(self.data[addr])  # self.data[addr]
             else:
                 # pymodbus 內部可能會使用 +1 位址
                 # 因此再嘗試 -1
