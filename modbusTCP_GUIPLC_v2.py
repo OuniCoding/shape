@@ -231,6 +231,9 @@ class PLC_GUI:
         server_running = True
         self.status.config(text="運行中", foreground="green")
 
+        for address in range(20001, 20026):
+            hr_block.set_D(address, 0)  # clean D20000~D20024
+
         def run_server():
             global server
             try:
