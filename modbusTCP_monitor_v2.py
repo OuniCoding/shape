@@ -190,7 +190,8 @@ class ModbusGUI:
                 try:
                     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                     sock.settimeout(0.1)
-                    result = sock.connect_ex((ip, 502))
+                    port = int(self.port_entry.get().strip())
+                    result = sock.connect_ex((ip, port))    # port = 5020
                     if result == 0:
                         self.text.insert(tk.END, f"找到 PLC: {ip}\n")
                         self.ip_entry.delete(0, tk.END)
