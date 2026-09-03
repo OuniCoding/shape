@@ -165,7 +165,7 @@ class PLC_GUI:
         frame1 = ttk.LabelFrame(root, text="Coil 控制 (M200~M213)")
         frame1.pack(fill="x", padx=10, pady=5)
 
-        self.coil_vars = []
+        self.coil_vars = {}
         for i in range(14):
             if (i >= 3 and i <= 9):
                 continue
@@ -177,7 +177,8 @@ class PLC_GUI:
                 command=lambda idx=i, v=var: self.set_coil(idx, v)
             )
             chk.grid(row=0, column=i, padx=5)
-            self.coil_vars.append(var)
+            # self.coil_vars.append(var)
+            self.coil_vars[i] = var
 
         # ===== Register 控制 =====
         frame2 = ttk.LabelFrame(root, text="D202/D203 寫入")
@@ -327,6 +328,10 @@ class PLC_GUI:
         while True:
             try:
                 coils = context[0].getValues(1, 0, count=14)
+                # ====================================================
+                # Modbus Coil → GUI Checkbutton 同步
+                # ====================================================
+
                 if coils[1] == 1:    # Stop
                     # context[0].setValues(3, 0, [0, 0])
                     # context[0].setValues(3, 2, [0, 0])
@@ -375,6 +380,7 @@ class PLC_GUI:
                     if (i >= 3 and i <= 9):
                         continue
                     text.append(f"M{200+i} = {v}")
+                    self.coil_vars[i].set(1 if coils[i] else 0)
 
                 self.text.delete(1.0, tk.END)
                 self.text.insert(tk.END, "\n".join(text))
