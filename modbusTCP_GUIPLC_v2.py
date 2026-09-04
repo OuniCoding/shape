@@ -379,7 +379,7 @@ class PLC_GUI:
                 for i, v in enumerate(coils):
                     if (i >= 3 and i <= 9):
                         continue
-                    text.append(f"M{200+i} = {v}")
+                    text.append(f"M{200+i} = {int(v)}")
                     self.coil_vars[i].set(1 if coils[i] else 0)
 
                 self.text.delete(1.0, tk.END)

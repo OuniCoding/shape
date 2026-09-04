@@ -56,7 +56,7 @@ class ModbusGUI:
     def __init__(self, root):
         self.root = root
         self.root.title("Modbus TCP 上位機")
-        self.root.geometry("420x520")
+        self.root.geometry("420x810")   # ("420x520")
 
         self.client = None
         self.running = False
@@ -136,10 +136,12 @@ class ModbusGUI:
 
         # === 狀態顯示 ===
         frame4 = ttk.LabelFrame(root, text="暫存器資料 (每秒更新)")
-        frame4.pack(fill="x", padx=10, pady=5)
+        # frame4.pack(fill="x", padx=10, pady=5)
+        frame4.pack(fill="both", expand=True, padx=10, pady=5)
 
         self.text = tk.Text(frame4, height=16, width=50)
-        self.text.pack(padx=5, pady=5)
+        # self.text.pack(padx=5, pady=5)
+        self.text.pack(fill="both", expand=True)
 
         # 自動刷新執行緒
         self.update_thread = threading.Thread(target=self.auto_update, daemon=True)
@@ -359,32 +361,31 @@ class ModbusGUI:
             if self.running and self.client:
                 try:
                     text = []
-                    datas = []
                     # --- read holding registers ---
                     # result = self.client.read_holding_registers(address=self.reg_addr, count=5)
                     result = self.client.read_holding_registers(address=self.reg_addr, count=5)
                     if not result.isError():
                         print(result.registers)
-                        datas.append(result.registers)
                         for i, v in enumerate(result.registers):
                             text.append(f"D[{self.reg_addr + i}] = {v}")
                     else:
                         text.append("讀取 Register 失敗")
 
-                    result_cut_time = self.client.read_holding_registers(address=20002, count=1)
+                    # result_cut_time = self.client.read_holding_registers(address=20002, count=1)
+                    result_cut_time = self.client.read_holding_registers(address=20000, count=25)
                     if not result_cut_time.isError():
                         print(result_cut_time.registers)
-                        v = result_cut_time.registers[0]
-                        datas.append(v)
-                        text.append(f"D[{20002}] = {v}")
+                        for i in range(25):
+                            v = result_cut_time.registers[i]
+                            text.append(f"D[{20000+i}] = {v}")
                     else:
-                        text.append("讀取 D20002 失敗")
+                        # text.append("讀取 D20002 失敗")
+                        text.append("讀取 D20000~20024 失敗")
 
                     # === 讀 Coil 0~13 ===
                     coil_result = self.client.read_coils(address=self.coil_addr, count=14)
                     if not coil_result.isError():
                         coils = coil_result.bits
-                        datas.append(coils)
 
                         text.append("\n--- Coil 狀態 ---")
                         for i in range(14):
@@ -400,7 +401,6 @@ class ModbusGUI:
                     else:
                         text.append("讀取 Coil 失敗")
 
-                    print(len(datas), datas)
                     self.text.delete(1.0, tk.END)
                     self.text.insert(tk.END, '\n'.join(text))
                 except Exception as e:
